@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "942885767569",
+    "project_id": "sadulur-5ce5e",
+    "storage_bucket": "sadulur-5ce5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:942885767569:android:524f8a413b8a542502f230",
+        "android_client_info": {
+          "package_name": "com.example.sadulur"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "942885767569-dsqtgaou72mricbjs8vv06gq9n8fnlh4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sadulur",
+            "certificate_hash": "5b2cb43e2962ea1472a9fd49ba876e0f1ed292ae"
+          }
+        },
+        {
+          "client_id": "942885767569-4vakb98a1o6ke6repf82dfgalpca48bs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCh9lI2m5ERlC3On4EvwzE64P1chCPPZp8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "942885767569-4vakb98a1o6ke6repf82dfgalpca48bs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "942885767569-2o94ke1qcsnqva1pec0bfl2cg8cmet95.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sadulur.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
