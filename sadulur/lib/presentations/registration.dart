@@ -18,7 +18,7 @@ import 'package:sadulur/models/user.dart';
 import 'package:sadulur/presentations/widgets/bezier_container.dart';
 import 'package:sadulur/presentations/widgets/circular_progress.dart';
 import 'package:sadulur/presentations/widgets/form/custom_text_field.dart';
-import 'package:sadulur/presentations/widgets/naviagion_bar.dart';
+import 'package:sadulur/presentations/widgets/navigation_bar.dart';
 import 'package:sadulur/store/app.state.dart';
 import 'package:sadulur/store/login/login.action.dart';
 

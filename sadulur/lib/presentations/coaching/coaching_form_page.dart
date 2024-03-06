@@ -8,12 +8,12 @@ import 'package:sadulur/presentations/widgets/form/custom_date_picker.dart';
 import 'package:sadulur/presentations/widgets/form/custom_drop_down.dart';
 import 'package:sadulur/presentations/widgets/form/custom_text_field.dart';
 
-class GoogleMeetFormPage extends StatefulWidget {
+class CoachingFormPage extends StatefulWidget {
   @override
-  _GoogleMeetFormPageState createState() => _GoogleMeetFormPageState();
+  _CoachingFormPageState createState() => _CoachingFormPageState();
 }
 
-class _GoogleMeetFormPageState extends State<GoogleMeetFormPage> {
+class _CoachingFormPageState extends State<CoachingFormPage> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   List<String> selectedParticipants = [];
 

@@ -29,13 +29,16 @@ class _StoreProductsState extends State<StoreProducts> {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        AlignedGridView.count(
-          crossAxisCount: 2,
-          itemCount: widget.store.listProduct?.length,
-          itemBuilder: (BuildContext context, int index) {
-            return StoreProductCard(product: widget.store.listProduct![index]);
-          },
-        )
+        widget.store.listProduct != null && widget.store.listProduct!.isNotEmpty
+            ? AlignedGridView.count(
+                crossAxisCount: 2,
+                itemCount: widget.store.listProduct?.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return StoreProductCard(
+                      product: widget.store.listProduct![index]);
+                },
+              )
+            : Container()
       ],
     );
   }

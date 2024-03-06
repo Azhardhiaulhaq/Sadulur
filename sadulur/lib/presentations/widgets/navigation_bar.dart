@@ -13,7 +13,7 @@ import 'package:sadulur/presentations/event.dart';
 import 'package:sadulur/presentations/event_detail.dart';
 import 'package:sadulur/presentations/event_form.dart';
 import 'package:sadulur/presentations/forum.dart';
-import 'package:sadulur/presentations/gmeet.dart';
+import 'package:sadulur/presentations/coaching/coaching_page.dart';
 import 'package:sadulur/presentations/home.dart';
 import 'package:sadulur/presentations/store_detail.dart';
 import 'package:sadulur/presentations/widgets/forum/new_post_editor.dart';
@@ -47,7 +47,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       // EntrepreneurialAssessmentPage(),
       const EventPage(title: "Events"),
       const ForumPage(title: "Networking"),
-      const GmeetPage(title: "Coaching Meeting"),
+      const CoachingPage(title: "Coaching Meeting"),
       StoreDetailPage(id: widget.user.id)
     ];
   }
