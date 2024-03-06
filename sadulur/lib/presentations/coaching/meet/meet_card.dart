@@ -31,9 +31,9 @@ class GoogleMeetCard extends StatelessWidget {
               children: [
                 Row(children: [
                   Image.asset(
-                    'assets/gmeet.png', // Replace with your image path
-                    width: 30.0, // Adjust the width as needed
-                    height: 30.0, // Adjust the height as needed
+                    'assets/zoom-logo2.png',
+                    width: 60.0,
+                    height: 60.0,
                   ),
                   const SizedBox(width: 8.0),
                   Text(
@@ -42,7 +42,7 @@ class GoogleMeetCard extends StatelessWidget {
                         textStyle: const TextStyle(
                       color: AppColor.darkDatalab,
                       fontWeight: FontWeight.bold,
-                      fontSize: 20.0, // Adjust the font size if needed
+                      fontSize: 20.0,
                     )),
                   ),
                 ]),
@@ -53,7 +53,7 @@ class GoogleMeetCard extends StatelessWidget {
                       textStyle: const TextStyle(
                     color: AppColor.darkDatalab,
                     fontWeight: FontWeight.w400,
-                    fontSize: 14.0, // Adjust the font size if needed
+                    fontSize: 14.0,
                   )),
                 ),
                 const SizedBox(height: 4.0),
@@ -77,16 +77,16 @@ class GoogleMeetCard extends StatelessWidget {
                     // You may want to implement the URL launching logic here
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        AppColor.darkDatalab), // Set button color here
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(AppColor.darkDatalab),
                   ),
                   child: Text(
-                    'Join Google Meet',
+                    'Join Meeting Room',
                     style: GoogleFonts.roboto(
                         textStyle: const TextStyle(
                       color: AppColor.secondaryTextDatalab,
                       fontWeight: FontWeight.bold,
-                      fontSize: 14.0, // Adjust the font size if needed
+                      fontSize: 14.0,
                     )),
                   ),
                 ),

@@ -12,7 +12,7 @@ import 'package:sadulur/constants/text_styles.dart';
 import 'package:sadulur/main.dart';
 import 'package:sadulur/models/google_meet.dart';
 import 'package:sadulur/presentations/coaching/coaching_form_page.dart';
-import 'package:sadulur/presentations/coaching/gmeet/gmeet_card.dart';
+import 'package:sadulur/presentations/coaching/meet/meet_card.dart';
 import 'package:sadulur/store/app.state.dart';
 import 'package:sadulur/store/gmeet/gmeet.action.dart';
 import 'package:googleapis_auth/auth_io.dart';
