@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
+import 'package:sadulur/main.dart';
 import 'package:sadulur/models/umkm_store.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/presentations/widgets/circular_progress.dart';
@@ -24,7 +25,6 @@ class HomePage extends StatelessWidget {
           umkmStores: store.state.umkmStoreState.umkmStores,
           user: store.state.loginState.user,
           isLoading: store.state.umkmStoreState.loading),
-      // onInit: (store) => store.dispatch(GetAllUmkmStoreAction()),
       onInit: (store) {
         store.dispatch(GetAllUmkmStoreAction());
         store.dispatch(
@@ -41,8 +41,6 @@ class HomePage extends StatelessWidget {
         if (viewModel.error != '') {
           CustomFlushbar.showFlushbar(context, "Error Loading Stores",
               viewModel.error, Colors.red[100]!);
-        } else if (viewModel.user.name == '' || viewModel.user.name == null) {
-          //TODO: Push to Fill Profile
         }
       },
     );
@@ -77,6 +75,7 @@ class _HomePageContent extends StatefulWidget {
 class _HomePageContentState extends State<_HomePageContent> {
   List<UMKMStore> filteredStores = [];
   String? selectedLevel;
+  String query = "";
   @override
   void initState() {
     super.initState();
@@ -93,32 +92,45 @@ class _HomePageContentState extends State<_HomePageContent> {
     });
   }
 
-  void filterStores(String query) {
+  void filterStores() {
     setState(() {
-      if (query.isEmpty) {
+      // query = queryValue;
+      if (query.isEmpty && selectedLevel == null) {
         filteredStores = widget.stores;
         return;
-      } else {
+      } else if (query.isEmpty && selectedLevel != null) {
+        filteredStores = widget.stores.where((store) {
+          return store.level == selectedLevel;
+        }).toList();
+      } else if (query.isNotEmpty && selectedLevel == null) {
         filteredStores = widget.stores.where((store) {
           final name = store.umkmName?.toLowerCase() ?? '';
           return name.contains(query.toLowerCase());
+        }).toList();
+      } else {
+        filteredStores = widget.stores.where((store) {
+          final name = store.umkmName?.toLowerCase() ?? '';
+          return name.contains(query.toLowerCase()) &&
+              store.level == selectedLevel;
         }).toList();
       }
     });
   }
 
-  void filterByLevel(String? level) {
-    setState(() {
-      selectedLevel = level;
-      if (level == null) {
-        filteredStores = widget.stores;
-      } else {
-        filteredStores = filteredStores.where((store) {
-          return store.level == level;
-        }).toList();
-      }
-    });
-  }
+  // void filterByLevel(String? level) {
+  //   setState(() {
+  //     selectedLevel = level;
+  //     if (level == null && query == null) {
+  //       filteredStores = filteredStores;
+  //     } else if (level == null && query != null) {
+  //       filterStores(query!);
+  //     } else {
+  //       filteredStores = widget.stores.where((store) {
+  //         return store.level == level;
+  //       }).toList();
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +138,7 @@ class _HomePageContentState extends State<_HomePageContent> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           centerTitle: true,
-          toolbarHeight: 80.0,
+          toolbarHeight: MediaQuery.of(context).size.height * 0.1,
           title: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,7 +168,10 @@ class _HomePageContentState extends State<_HomePageContent> {
                           constraints: const BoxConstraints(maxHeight: 60),
                           child: TextField(
                             onChanged: (value) {
-                              filterStores(value);
+                              setState(() {
+                                query = value;
+                              });
+                              filterStores();
                             },
                             decoration: InputDecoration(
                               hintText: 'Search',
@@ -181,7 +196,10 @@ class _HomePageContentState extends State<_HomePageContent> {
                       child: DropdownButton<String>(
                         value: selectedLevel,
                         onChanged: (String? newValue) {
-                          filterByLevel(newValue);
+                          setState(() {
+                            selectedLevel = newValue;
+                          });
+                          filterStores();
                         },
                         items: <String?>[
                           null, // Add an option to reset filter
@@ -198,14 +216,32 @@ class _HomePageContentState extends State<_HomePageContent> {
                     ),
                     filteredStores.isNotEmpty
                         ? Expanded(
-                            child: ListView.builder(
-                              itemCount: filteredStores.length,
-                              itemBuilder: (context, index) {
-                                return UMKMStoreCard(
-                                    store: filteredStores[index]);
-                              },
-                            ),
-                          )
+                            child: RefreshIndicator(
+                                color: AppColor.darkDatalab,
+                                onRefresh: () async {
+                                  StoreProvider.of<AppState>(context)
+                                      .dispatch(GetAllUmkmStoreAction());
+                                },
+                                notificationPredicate:
+                                    (ScrollNotification notification) {
+                                  return notification.depth == 1;
+                                },
+                                child: CustomScrollView(slivers: <Widget>[
+                                  SliverToBoxAdapter(
+                                    child: SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.6,
+                                      child: ListView.builder(
+                                        itemCount: filteredStores.length,
+                                        itemBuilder: (context, index) {
+                                          return UMKMStoreCard(
+                                              store: filteredStores[index]);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ])))
                         : Expanded(
                             child: Center(
                             child: Column(
@@ -230,6 +266,9 @@ class _HomePageContentState extends State<_HomePageContent> {
                               ],
                             ),
                           )),
+                    const SizedBox(
+                      height: 70,
+                    ),
                   ],
                 )),
             widget.isLoading
