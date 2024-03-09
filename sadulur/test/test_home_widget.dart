@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sadulur/presentations/home.dart';
-import 'package:sadulur/presentations/widgets/umkm_store/store_card.dart';
+import 'package:sadulur/presentations/home/home_page.dart';
+// ignore: unused_import
+import 'package:sadulur/presentations/home/widget/store_card.dart';
 
 void main() {
   testWidgets('HomePage Widget Test', (WidgetTester tester) async {

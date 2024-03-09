@@ -40,34 +40,49 @@ class UMKMStoreCard extends StatelessWidget {
                       maxRadius: 20,
                       backgroundColor: AppColor.darkDatalab,
                     ),
-                    title: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "[${store.level}] - ",
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(
-                                color: _getColorForLevel(store.level),
-                                fontWeight: FontWeight
-                                    .w700, // You can adjust the font weight
-                                fontSize:
-                                    16.0, // Adjust the font size if needed
-                              ),
-                            ),
-                          ),
-                          Text(
-                            store.umkmName ?? "No Given Store Name",
-                            style: GoogleFonts.lato(
-                              textStyle: const TextStyle(
-                                color: AppColor.darkDatalab,
-                                fontWeight: FontWeight
-                                    .w700, // You can adjust the font weight
-                                fontSize:
-                                    16.0, // Adjust the font size if needed
-                              ),
-                            ),
-                          ),
-                        ]),
+                    title: Text(
+                      store.umkmName ?? "No Given Store Name",
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                      style: GoogleFonts.lato(
+                        textStyle: const TextStyle(
+                          color: AppColor.darkDatalab,
+                          fontWeight:
+                              FontWeight.w700, // You can adjust the font weight
+                          fontSize: 16.0, // Adjust the font size if needed
+                        ),
+                      ),
+                    ),
+                    // Row(
+                    //     mainAxisAlignment: MainAxisAlignment.start,
+                    //     children: [
+                    //       Text(
+                    //         "[${store.level}] - ",
+                    //         style: GoogleFonts.lato(
+                    //           textStyle: TextStyle(
+                    //             color: _getColorForLevel(store.level),
+                    //             fontWeight: FontWeight
+                    //                 .w700, // You can adjust the font weight
+                    //             fontSize:
+                    //                 16.0, // Adjust the font size if needed
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Text(
+                    //         store.umkmName ?? "No Given Store Name",
+                    //         maxLines: 2,
+                    //         overflow: TextOverflow.fade,
+                    //         style: GoogleFonts.lato(
+                    //           textStyle: const TextStyle(
+                    //             color: AppColor.darkDatalab,
+                    //             fontWeight: FontWeight
+                    //                 .w700, // You can adjust the font weight
+                    //             fontSize:
+                    //                 16.0, // Adjust the font size if needed
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ]),
                     subtitle: Text(
                         "${store.address ?? "No Given Address"}, ${store.city}, ${store.province}",
                         style: GoogleFonts.lato(
@@ -99,20 +114,38 @@ class UMKMStoreCard extends StatelessWidget {
                   const SizedBox(
                     height: 16.0,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: store.tags.map((tag) {
-                      return Container(
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    spacing: 4,
+                    runSpacing: 4,
+                    children: [
+                      Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 4),
                         margin: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
-                          color: AppColor.darkDatalab,
+                          color: AppColor.secondaryTextDatalab,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Text(tag, style: CustomTextStyles.tagText1),
-                      );
-                    }).toList(),
+                        child:
+                            Text(store.level, style: CustomTextStyles.tagText1),
+                      ),
+                      ...store.tags.map((tag) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 4),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(
+                            color: AppColor.darkDatalab,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            tag,
+                            style: CustomTextStyles.tagText1,
+                          ),
+                        );
+                      })
+                    ],
                   ),
                 ],
               ),
