@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/main.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/presentations/assessment.dart';
 import 'package:sadulur/presentations/edit_store_detail.dart';
-import 'package:sadulur/presentations/entrepreneurial_assessment.dart';
 import 'package:sadulur/presentations/event.dart';
 import 'package:sadulur/presentations/event_detail.dart';
 import 'package:sadulur/presentations/event_form.dart';
 import 'package:sadulur/presentations/forum.dart';
 import 'package:sadulur/presentations/coaching/coaching_page.dart';
-import 'package:sadulur/presentations/home.dart';
+import 'package:sadulur/presentations/home/home_page.dart';
 import 'package:sadulur/presentations/store_detail.dart';
 import 'package:sadulur/presentations/widgets/forum/new_post_editor.dart';
-import 'package:sadulur/store/app.state.dart';
 
 class BottomNavigation extends StatefulWidget {
   final BuildContext menuScreenContext;
   final UMKMUser user;
-  BottomNavigation(
+  const BottomNavigation(
       {Key? key, required this.menuScreenContext, required this.user})
       : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _BottomNavigationState createState() => _BottomNavigationState();
 }
 
@@ -70,7 +67,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                   _controller.jumpToTab(4);
                 } else if (settings.name == '/store/edit') {
                   return MaterialPageRoute(
-                      builder: (context) => EditStoreDetailPage());
+                      builder: (context) => const EditStoreDetailPage());
                 } else if (settings.name == '/store/assessment') {
                   return MaterialPageRoute(
                       builder: (context) => const AssessmentUMKMPage());
@@ -133,7 +130,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                       builder: (context) => StoreDetailPage(id: arg['id']));
                 } else if (settings.name == '/store/edit') {
                   return MaterialPageRoute(
-                      builder: (context) => EditStoreDetailPage());
+                      builder: (context) => const EditStoreDetailPage());
                 } else if (settings.name == '/store/assessment') {
                   return MaterialPageRoute(
                       builder: (context) => const AssessmentUMKMPage());

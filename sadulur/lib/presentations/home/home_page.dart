@@ -1,16 +1,14 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
-import 'package:sadulur/main.dart';
 import 'package:sadulur/models/umkm_store.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/presentations/widgets/circular_progress.dart';
 import 'package:sadulur/presentations/widgets/flushbar.dart';
-import 'package:sadulur/presentations/widgets/umkm_store/store_card.dart';
+import 'package:sadulur/presentations/home/widget/store_card.dart';
 import 'package:sadulur/store/app.state.dart';
 import 'package:sadulur/store/login/login.action.dart';
 import 'package:sadulur/store/umkm_store/umkm_store.action.dart';
