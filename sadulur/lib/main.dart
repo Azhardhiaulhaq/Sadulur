@@ -1,15 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:googleapis/calendar/v3.dart';
-import 'package:googleapis_auth/auth_io.dart';
 import 'package:logger/logger.dart';
 import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
-import 'package:sadulur/constants/secrets.dart';
-import 'package:sadulur/presentations/login.dart';
-import 'package:sadulur/presentations/widgets/naviagion_bar.dart';
+import 'package:sadulur/presentations/widgets/navigation_bar.dart';
 import 'package:sadulur/store/app.middleware.dart';
 import 'package:sadulur/store/app.reducer.dart';
 import 'package:sadulur/store/app.state.dart';
@@ -18,7 +13,6 @@ import 'package:sadulur/store/event/event.state.dart';
 import 'package:sadulur/store/forum/forum.state.dart';
 import 'package:sadulur/store/gmeet/gmeet.state.dart';
 import 'package:sadulur/store/login/login.state.dart';
-import 'package:googleapis/calendar/v3.dart' as cal;
 import 'package:sadulur/store/umkm_store/umkm_store.state.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'firebase_options.dart';
@@ -64,7 +58,6 @@ void prompt(String url) async {
   url =
       "https://accounts.google.com/o/oauth2/v2/auth?client_id=508765405163-moo7plbapuvfistd6ihha8sg56kdstmh.apps.googleusercontent.com&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A44967&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&code_challenge=aKpJEwt1yTkQADKYHPzkmnFSDZ9OHc1zRVUxKGeGlJ0&code_challenge_method=S256&hd=127.0.0.1&state=jVdBNzV1Hy41LI9HlwhntG5MWNRSd-9Y";
   Uri parsedUrl = Uri.parse(url);
-  logger.d("parsedUrl: $parsedUrl");
   if (await canLaunchUrl(parsedUrl)) {
     await launchUrl(parsedUrl);
   } else {

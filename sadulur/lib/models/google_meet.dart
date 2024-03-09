@@ -5,7 +5,6 @@ class GoogleMeet {
   final DateTime endTime;
   final String title;
   final String description;
-  final String location;
   final String meetLink;
   final List<String> attendees;
 
@@ -14,7 +13,6 @@ class GoogleMeet {
       required this.endTime,
       required this.title,
       required this.description,
-      required this.location,
       required this.meetLink,
       required this.attendees});
 }

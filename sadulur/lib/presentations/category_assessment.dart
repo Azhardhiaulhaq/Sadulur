@@ -97,10 +97,7 @@ class _CategoryAsessmentContentState extends State<_CategoryAsessmentContent> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      logger.d(_bussinessKey.currentState!.getFormValues());
-      // Access formKey.currentState here
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
 
   @override
