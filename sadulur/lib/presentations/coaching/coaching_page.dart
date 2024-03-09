@@ -7,17 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:redux/redux.dart';
-import 'package:sadulur/constants/secrets.dart';
 import 'package:sadulur/constants/text_styles.dart';
 import 'package:sadulur/main.dart';
 import 'package:sadulur/models/google_meet.dart';
+import 'package:sadulur/models/participant_list.dart';
 import 'package:sadulur/presentations/coaching/coaching_form_page.dart';
 import 'package:sadulur/presentations/coaching/meet/meet_card.dart';
 import 'package:sadulur/store/app.state.dart';
 import 'package:sadulur/store/gmeet/gmeet.action.dart';
-import 'package:googleapis_auth/auth_io.dart';
-import 'package:googleapis/calendar/v3.dart' as cal;
-import 'package:googleapis_auth/googleapis_auth.dart' as auth;
 
 class CoachingPage extends StatelessWidget {
   const CoachingPage({super.key, required this.title});
@@ -29,14 +26,16 @@ class CoachingPage extends StatelessWidget {
     return StoreConnector<AppState, _CoachingPageViewModel>(
       converter: (Store<AppState> store) => _CoachingPageViewModel(
           gmeetList: store.state.gmeetState.gmeetList,
+          participantList: store.state.gmeetState.participantList,
           isLoading: store.state.loginState.loading),
-      onInit: (store) => store.dispatch(
-          GmeetInitAction(email: store.state.loginState.user?.email ?? "")),
+      onInit: (store) => store
+          .dispatch(GmeetInitAction(email: store.state.loginState.user.email)),
       builder: (BuildContext context, _CoachingPageViewModel viewModel) {
         return _ForumPageContent(
           title: title,
           isLoading: viewModel.isLoading,
           gmeetList: viewModel.gmeetList,
+          participantList: viewModel.participantList,
         );
       },
     );
@@ -46,17 +45,25 @@ class CoachingPage extends StatelessWidget {
 class _CoachingPageViewModel {
   final List<GoogleMeet> gmeetList;
   final bool isLoading;
+  final List<ParticipantList> participantList;
 
-  _CoachingPageViewModel({required this.gmeetList, required this.isLoading});
+  _CoachingPageViewModel(
+      {required this.gmeetList,
+      required this.isLoading,
+      required this.participantList});
 }
 
 class _ForumPageContent extends StatefulWidget {
   final String title;
   final bool isLoading;
   final List<GoogleMeet> gmeetList;
+  final List<ParticipantList> participantList;
 
   const _ForumPageContent(
-      {required this.title, required this.isLoading, required this.gmeetList});
+      {required this.title,
+      required this.isLoading,
+      required this.gmeetList,
+      required this.participantList});
 
   @override
   _ForumPageContentState createState() => _ForumPageContentState();
@@ -65,6 +72,7 @@ class _ForumPageContent extends StatefulWidget {
 class _ForumPageContentState extends State<_ForumPageContent> {
   @override
   Widget build(BuildContext context) {
+    logger.d(widget.gmeetList);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -86,13 +94,10 @@ class _ForumPageContentState extends State<_ForumPageContent> {
             icon: const Icon(Icons.add, color: Colors.black), // Plus icon
             onPressed: () {
               PersistentNavBarNavigator.pushNewScreen(context,
-                  screen: CoachingFormPage(), withNavBar: false);
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.black), // Search icon
-            onPressed: () {
-              // Add your functionality for the search icon here
+                  screen: CoachingFormPage(
+                    participantList: widget.participantList,
+                  ),
+                  withNavBar: false);
             },
           ),
         ],
@@ -100,7 +105,7 @@ class _ForumPageContentState extends State<_ForumPageContent> {
       body: Container(
           color: Colors.grey[200],
           child: Padding(
-            padding: EdgeInsets.only(bottom: 32),
+            padding: const EdgeInsets.only(bottom: 32),
             child: ListView.builder(
               itemCount: widget.gmeetList.length,
               itemBuilder: (context, index) {

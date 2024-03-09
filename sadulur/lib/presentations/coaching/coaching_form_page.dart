@@ -2,14 +2,26 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
+import 'package:sadulur/main.dart';
+import 'package:sadulur/models/google_meet.dart';
+import 'package:sadulur/models/participant_list.dart';
 import 'package:sadulur/presentations/widgets/form/custom_date_picker.dart';
 import 'package:sadulur/presentations/widgets/form/custom_drop_down.dart';
 import 'package:sadulur/presentations/widgets/form/custom_text_field.dart';
+import 'package:sadulur/store/app.state.dart';
+import 'package:sadulur/store/gmeet/gmeet.action.dart';
 
 class CoachingFormPage extends StatefulWidget {
+  List<ParticipantList> participantList;
+  CoachingFormPage({super.key, required this.participantList});
+
   @override
+  // ignore: library_private_types_in_public_api
   _CoachingFormPageState createState() => _CoachingFormPageState();
 }
 
@@ -45,20 +57,30 @@ class _CoachingFormPageState extends State<CoachingFormPage> {
             padding: const EdgeInsets.all(16.0),
             child: FormBuilder(
               key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
+              autovalidateMode: AutovalidateMode.always,
               child: Column(
                 children: [
-                  const CustomTextField(
-                      labelText: "Meeting Title",
-                      fieldName: "meetingTitle",
-                      isRequired: false),
+                  CustomTextField(
+                    labelText: "Meeting Title",
+                    fieldName: "meetingTitle",
+                    validator: FormBuilderValidators.required(
+                        errorText: "Judul Meeting harus diisi"),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  CustomTextField(
+                    labelText: "Meeting Link",
+                    fieldName: "meetingLink",
+                    validator: FormBuilderValidators.required(
+                        errorText: "Link Meeting tidak boleh kosong"),
+                  ),
                   const SizedBox(
                     height: 16,
                   ),
                   const CustomTextField(
                       labelText: "Meeting Description",
                       fieldName: "meetingDescription",
-                      isRequired: false,
                       maxLines: 4),
                   const SizedBox(
                     height: 16,
@@ -82,52 +104,33 @@ class _CoachingFormPageState extends State<CoachingFormPage> {
                       )),
                     ],
                   ),
-                  FormBuilderSwitch(
-                    name: 'addMeetingRoom',
-                    title: Text(
-                      'Add Google Meeting Room',
-                      style: CustomTextStyles.formBoldText1,
-                    ),
-                    initialValue: true,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none, // Remove the border
-                      fillColor:
-                          Colors.transparent, // Set transparent fill color
-                    ),
-                    activeColor: AppColor
-                        .secondaryTextDatalab, // Set the color of the switch thumb when active
-                    inactiveThumbColor: AppColor.darkGrey,
-                  ),
+                  // FormBuilderSwitch(
+                  //   name: 'addMeetingRoom',
+                  //   title: Text(
+                  //     'Add Google Meeting Room',
+                  //     style: CustomTextStyles.formBoldText1,
+                  //   ),
+                  //   initialValue: true,
+                  //   decoration: const InputDecoration(
+                  //     border: InputBorder.none, // Remove the border
+                  //     fillColor:
+                  //         Colors.transparent, // Set transparent fill color
+                  //   ),
+                  //   activeColor: AppColor
+                  //       .secondaryTextDatalab, // Set the color of the switch thumb when active
+                  //   inactiveThumbColor: AppColor.darkGrey,
+                  // ),
                   const SizedBox(height: 16.0),
                   CustomGroupDropdown(
                     labelText: 'Email Participants',
                     fieldName: 'participantList',
                     onChanged: (String? value) {
-                      print('Selected Email Group: $value');
-                      // You may add participants based on the selected group
-                      // For simplicity, let's add predefined participants
-                      if (value == 'Group A') {
-                        setState(() {
-                          selectedParticipants = [
-                            'participant1@example.com',
-                            'participant2@example.com'
-                          ];
-                        });
-                      } else if (value == 'Group B') {
-                        setState(() {
-                          selectedParticipants = [
-                            'participant3@example.com',
-                            'participant4@example.com'
-                          ];
-                        });
-                      } else if (value == 'Group C') {
-                        setState(() {
-                          selectedParticipants = [
-                            'participant5@example.com',
-                            'participant6@example.com'
-                          ];
-                        });
-                      }
+                      setState(() {
+                        selectedParticipants = widget.participantList
+                            .where((element) => element.name == value)
+                            .first
+                            .participants;
+                      });
                     },
                     items: const ['Group A', 'Group B', 'Group C'],
                   ),
@@ -147,45 +150,70 @@ class _CoachingFormPageState extends State<CoachingFormPage> {
                   else
                     const Text('No participants selected'),
                   const SizedBox(height: 16.0),
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.saveAndValidate()) {
-                              // Perform actions with the form data
-                              Map<String, dynamic> formData =
-                                  _formKey.currentState!.value;
-                              // GoogleMeet googleMeet = GoogleMeet(
-                              //   startTime: formData['startTime'],
-                              //   endTime: formData['endTime'],
-                              //   title: formData['title'],
-                              //   description: formData['description'],
-                              //   location: formData['location'] ?? '',
-                              //   meetLink: '', // You may want to generate a meet link here
-                              //   attendees: (formData['attendees'] as String).split('\n'),
-                              // );
-
-                              // Do something with the GoogleMeet object, e.g., save to database
-                              // print(googleMeet);
-                            }
-                          },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  AppColor.darkDatalab)),
-                          child: Text(
-                            'Create Google Meet',
-                            style: CustomTextStyles.buttonText2,
-                          ),
-                        ),
-                      )),
-                  const SizedBox(height: 60.0),
+                  _submitButton(
+                      context, _formKey.currentState?.isValid ?? false),
+                  const SizedBox(height: 30.0),
                 ],
               ),
             ),
           ),
         ));
+  }
+
+  Widget _submitButton(BuildContext context, bool isFormValid) {
+    return StoreConnector<AppState, VoidCallback>(
+      converter: (Store<AppState> store) {
+        return isFormValid
+            ? () async {
+                if (_formKey.currentState!.saveAndValidate()) {
+                  // Perform actions with the form data
+                  Map<String, dynamic> formData = _formKey.currentState!.value;
+                  logger.d(formData);
+                  GoogleMeet meet = GoogleMeet(
+                      startTime: formData["startDate"],
+                      endTime: formData['endDate'],
+                      title: formData['meetingTitle'] ?? "",
+                      description: formData['meetingDescription'] ?? "",
+                      meetLink: formData["meetingLink"],
+                      attendees: selectedParticipants);
+                  store.dispatch(AddMeetingAction(meet: meet));
+                }
+              }
+            : () async {};
+      },
+      builder: (BuildContext context, VoidCallback callback) {
+        return Container(
+          decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: const Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                ),
+              ],
+              color: isFormValid ? AppColor.darkDatalab : AppColor.darkGrey),
+          child: Align(
+              alignment: Alignment.centerRight,
+              child: SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: callback,
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          isFormValid
+                              ? AppColor.darkDatalab
+                              : AppColor.darkGrey)),
+                  child: Text(
+                    'Create Meeting',
+                    style: CustomTextStyles.buttonText2,
+                  ),
+                ),
+              )),
+        );
+      },
+    );
   }
 }

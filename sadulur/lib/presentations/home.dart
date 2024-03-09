@@ -203,7 +203,6 @@ class _HomePageContentState extends State<_HomePageContent> {
                             child: ListView.builder(
                               itemCount: filteredStores.length,
                               itemBuilder: (context, index) {
-                                logger.d(filteredStores[index].photoProfile);
                                 return UMKMStoreCard(
                                     store: filteredStores[index]);
                               },

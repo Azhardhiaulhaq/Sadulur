@@ -58,7 +58,6 @@ void prompt(String url) async {
   url =
       "https://accounts.google.com/o/oauth2/v2/auth?client_id=508765405163-moo7plbapuvfistd6ihha8sg56kdstmh.apps.googleusercontent.com&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A44967&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&code_challenge=aKpJEwt1yTkQADKYHPzkmnFSDZ9OHc1zRVUxKGeGlJ0&code_challenge_method=S256&hd=127.0.0.1&state=jVdBNzV1Hy41LI9HlwhntG5MWNRSd-9Y";
   Uri parsedUrl = Uri.parse(url);
-  logger.d("parsedUrl: $parsedUrl");
   if (await canLaunchUrl(parsedUrl)) {
     await launchUrl(parsedUrl);
   } else {

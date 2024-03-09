@@ -24,10 +24,7 @@ class AssessmentUMKMPage extends StatelessWidget {
           user: store.state.loginState.user,
           isLoading: store.state.umkmStoreState.loading),
       onInit: (store) => store.dispatch(GetAllUmkmStoreAction()),
-      onWillChange: (previousViewModel, newViewModel) {
-        logger.d(previousViewModel?.store.photoProfile);
-        logger.d(newViewModel.store.photoProfile);
-      },
+      onWillChange: (previousViewModel, newViewModel) {},
       builder: (BuildContext context, _UmkmPageViewModel viewModel) {
         return AssessmentPage(
           title: "UMKM Dashboard",

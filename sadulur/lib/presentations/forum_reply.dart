@@ -33,10 +33,7 @@ class ForumReplyPage extends StatelessWidget {
           user: store.state.loginState.user,
           replies: store.state.forumState.replies ?? []),
       onInit: (store) => store.dispatch(GetForumRepliesAction(forumID: postID)),
-      onWillChange: (previousViewModel, newViewModel) {
-        logger.d(previousViewModel?.replies.length);
-        logger.d(newViewModel.replies.length);
-      },
+      onWillChange: (previousViewModel, newViewModel) {},
       // onDidChange: ((previousViewModel, viewModel) {
       //   // if (viewModel.error != '') {
       //   //   CustomFlushbar.showFlushbar(context, "Error Forum", viewModel.error,

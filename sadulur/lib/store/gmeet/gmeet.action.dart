@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sadulur/models/google_meet.dart';
 
 class GmeetAction {
   @override
@@ -60,4 +61,22 @@ class GmeetFailedAction {
   String toString() {
     return 'GmeetFailedAction { error: $error }';
   }
+}
+
+class AddMeetingAction {
+  final GoogleMeet meet;
+  final String type = "ADD_MEETING_ACTION";
+  AddMeetingAction({required this.meet});
+}
+
+class AddMeetingSuccessAction {
+  final dynamic payload;
+  final String type = "ADD_MEETING_SUCCESS_ACTION";
+  AddMeetingSuccessAction({required this.payload});
+}
+
+class AddMeetingFailedAction {
+  final String error;
+
+  AddMeetingFailedAction({required this.error});
 }
