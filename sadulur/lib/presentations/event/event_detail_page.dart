@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
-import 'package:sadulur/main.dart';
 import 'package:sadulur/models/event.dart';
-import 'package:sadulur/models/umkm_store.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/presentations/widgets/circular_progress.dart';
 import 'package:sadulur/presentations/widgets/flushbar.dart';
-import 'package:sadulur/presentations/widgets/form/custom_date_picker.dart';
-import 'package:sadulur/presentations/widgets/form/custom_text_field.dart';
 import 'package:sadulur/store/app.state.dart';
-import 'package:sadulur/store/assessment/assessment.action.dart';
-import 'package:sadulur/store/event/event.action.dart';
-import 'package:sadulur/store/umkm_store/umkm_store.action.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EventDetailPage extends StatelessWidget {
@@ -31,17 +22,7 @@ class EventDetailPage extends StatelessWidget {
           user: store.state.loginState.user,
           isLoading: store.state.eventState.loading,
           event: event),
-      // onInit: (store) => store.dispatch(
-      //     GetUmkmStoreDetailAction(user: store.state.loginState.user)),
-      onWillChange: (previousViewModel, newViewModel) {
-        // if (previousViewModel?.user.store.updatedAt != null) {
-        //   if (previousViewModel!.user.store.updatedAt!
-        //       .isBefore(newViewModel.user.store.updatedAt!)) {
-        //     CustomFlushbar.showFlushbar(context, "Success Update Profile",
-        //         "Basic Informations Updated", AppColor.flushbarSuccessBG);
-        //   }
-        // }
-      },
+      onWillChange: (previousViewModel, newViewModel) {},
       builder: (BuildContext context, _EventDetailViewModel viewModel) {
         return _EventDetailContent(
             title: "New Form",
@@ -78,8 +59,6 @@ class _EventDetailContent extends StatefulWidget {
 }
 
 class _EventDetailContentState extends State<_EventDetailContent> {
-  final _formKey = GlobalKey<FormBuilderState>();
-
   @override
   void initState() {
     super.initState();
@@ -92,17 +71,12 @@ class _EventDetailContentState extends State<_EventDetailContent> {
         "whatsapp://send?phone=$phoneNumber&text=$message";
     if (await canLaunchUrl(Uri.parse(whatsappURl_android))) {
       await launchUrl(Uri.parse(whatsappURl_android));
-    } else {
-      // ScaffoldMessenger.of(context)
-      //     .showSnackBar(SnackBar(content: new Text("whatsapp no installed")));
     }
   }
 
   void openLink(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
-    } else {
-      print('There was a problem to open the url: $url');
     }
   }
 
@@ -112,7 +86,7 @@ class _EventDetailContentState extends State<_EventDetailContent> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        toolbarHeight: 80.0,
+        toolbarHeight: MediaQuery.of(context).size.height * 0.1,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColor.darkDatalab),
           onPressed: () {
@@ -140,6 +114,28 @@ class _EventDetailContentState extends State<_EventDetailContent> {
           child: SingleChildScrollView(
               child: Column(
             children: [
+              widget.event.bannerImage != "" && widget.event.bannerImage != null
+                  ? Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      elevation: 4,
+                      color: Colors.white,
+                      margin: const EdgeInsets.all(16),
+                      child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 100,
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              image: DecorationImage(
+                                  image:
+                                      NetworkImage(widget.event.bannerImage!),
+                                  fit: BoxFit.fitWidth),
+                              border:
+                                  Border.all(color: AppColor.backgroundWhite),
+                              borderRadius: BorderRadius.circular(16))))
+                  : Container(),
               Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
@@ -193,8 +189,13 @@ class _EventDetailContentState extends State<_EventDetailContent> {
                                       widget.event.contactPerson != ''
                                           ? share(
                                               '62${widget.event.contactPerson}',
-                                              'Halo')
-                                          : print('Contact Person is null');
+                                              'Halo',
+                                            )
+                                          : CustomFlushbar.showFlushbar(
+                                              context,
+                                              'Tidak Dapat Menghubungi',
+                                              'Nomor Tidak Valid',
+                                              AppColor.flushbarErrorBG);
                                     },
                                   )),
                               const SizedBox(
@@ -207,7 +208,10 @@ class _EventDetailContentState extends State<_EventDetailContent> {
                               : Container()
                         ],
                       ))),
-              _linkButton(widget.event.link ?? "")
+              _linkButton(widget.event.link ?? ""),
+              const SizedBox(
+                height: 70,
+              )
             ],
           ))),
     );
@@ -219,19 +223,26 @@ class _EventDetailContentState extends State<_EventDetailContent> {
       child: InkWell(
           splashColor: Colors.transparent,
           onTap: () {
-            link != '' ? openLink(link) : print(link);
+            link != ''
+                ? openLink(link)
+                : CustomFlushbar.showFlushbar(
+                    context,
+                    'Tidak Dapat Membuka Tautan',
+                    'Link Tidak Valid',
+                    AppColor.flushbarErrorBG);
+            ;
           },
           child: Container(
               width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Card(
                 color: link != '' ? AppColor.darkDatalab : Colors.grey,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
                 elevation: 3,
                 child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Container(
+                    padding: const EdgeInsets.all(15),
+                    child: SizedBox(
                         height: 20,
                         child: Center(
                           child: Text(
@@ -248,75 +259,6 @@ class _EventDetailContentState extends State<_EventDetailContent> {
                           ),
                         ))),
               ))),
-    );
-  }
-
-  Widget _submitButton(BuildContext context, bool isFormValid) {
-    return StoreConnector<AppState, VoidCallback>(
-      converter: (Store<AppState> store) {
-        return isFormValid
-            ? () async {
-                String name = _formKey.currentState?.fields["name"]?.value;
-                var eventDate =
-                    _formKey.currentState?.fields["eventDate"]?.value;
-
-                var description =
-                    _formKey.currentState?.fields["description"]?.value;
-                var location = _formKey.currentState?.fields["location"]?.value;
-                var contactPerson =
-                    _formKey.currentState?.fields["contactPerson"]?.value;
-
-                var link = _formKey.currentState?.fields["link"]?.value;
-                Event newEvent = Event(
-                    id: "",
-                    name: name,
-                    date: eventDate,
-                    description: description,
-                    location: location,
-                    contactPerson: contactPerson,
-                    link: link,
-                    author: widget.user.id);
-
-                store.dispatch(AddEventAction(event: newEvent));
-              }
-            : () async {};
-      },
-      builder: (BuildContext context, VoidCallback callback) {
-        return Container(
-          decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(5)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: const Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                ),
-              ],
-              color: isFormValid ? AppColor.darkDatalab : AppColor.darkGrey),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              splashColor: Colors.blueGrey,
-              onTap: callback,
-              child: Container(
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: Text(
-                  'Submit',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: isFormValid
-                        ? AppColor.secondaryTextDatalab
-                        : AppColor.darkDatalab,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

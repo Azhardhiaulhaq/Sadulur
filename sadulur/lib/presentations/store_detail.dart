@@ -20,7 +20,9 @@ class StoreDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, _StoreDetailPageViewModel>(
       converter: (Store<AppState> store) => _StoreDetailPageViewModel(
-          storeDetail: store.state.loginState.user.store,
+          storeDetail: store.state.umkmStoreState.umkmStores
+              .where((element) => element.id == id)
+              .first,
           user: store.state.loginState.user,
           error: store.state.umkmStoreState.error,
           isLoading: store.state.umkmStoreState.loading),

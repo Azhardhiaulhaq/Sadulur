@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:io';
 
 class Event {
   final String id;
@@ -10,6 +11,7 @@ class Event {
   final DateTime date;
   final String author;
   final String contactPerson;
+  final File? banner;
 
   Event(
       {required this.id,
@@ -20,19 +22,20 @@ class Event {
       this.link,
       required this.date,
       required this.author,
-      required this.contactPerson});
+      required this.contactPerson,
+      this.banner});
 
-  Event copyWith({
-    String? id,
-    String? name,
-    String? description,
-    String? bannerImage,
-    String? location,
-    String? link,
-    DateTime? date,
-    String? author,
-    String? contactPerson,
-  }) {
+  Event copyWith(
+      {String? id,
+      String? name,
+      String? description,
+      String? bannerImage,
+      String? location,
+      String? link,
+      DateTime? date,
+      String? author,
+      String? contactPerson,
+      File? banner}) {
     return Event(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -43,6 +46,7 @@ class Event {
       date: date ?? this.date,
       author: author ?? this.author,
       contactPerson: contactPerson ?? this.contactPerson,
+      banner: banner ?? this.banner,
     );
   }
 }

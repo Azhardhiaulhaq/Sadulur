@@ -6,9 +6,9 @@ import 'package:sadulur/main.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/presentations/assessment.dart';
 import 'package:sadulur/presentations/edit_store_detail.dart';
-import 'package:sadulur/presentations/event.dart';
-import 'package:sadulur/presentations/event_detail.dart';
-import 'package:sadulur/presentations/event_form.dart';
+import 'package:sadulur/presentations/event/event_page.dart';
+import 'package:sadulur/presentations/event/event_detail_page.dart';
+import 'package:sadulur/presentations/event/event_form_page.dart';
 import 'package:sadulur/presentations/forum.dart';
 import 'package:sadulur/presentations/coaching/coaching_page.dart';
 import 'package:sadulur/presentations/home/home_page.dart';
@@ -38,6 +38,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
     _hideNavBar = false;
   }
 
+  getRoutes(BuildContext context) {
+    return {
+      "/store/edit": (final context) => const EditStoreDetailPage(),
+      "/store/assessment": (final context) => const AssessmentUMKMPage(),
+      '/event/add': (final context) => const EventFormPage(),
+    };
+  }
+
   List<Widget> _buildScreens() {
     return [
       const HomePage(),
@@ -52,27 +60,37 @@ class _BottomNavigationState extends State<BottomNavigation> {
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-          icon: const Icon(Icons.home),
-          title: "Home",
-          activeColorPrimary: AppColor.darkDatalab,
-          inactiveColorPrimary: AppColor.darkGrey,
-          routeAndNavigatorSettings: RouteAndNavigatorSettings(
-              initialRoute: '/',
-              onGenerateRoute: (RouteSettings settings) {
-                var arg = settings.arguments as Map;
-                logger.d(settings.name);
-                if (settings.name == '/store') {
-                  // return MaterialPageRoute(
-                  //     builder: (context) => StoreDetailPage(id: arg['id']));
-                  _controller.jumpToTab(4);
-                } else if (settings.name == '/store/edit') {
-                  return MaterialPageRoute(
-                      builder: (context) => const EditStoreDetailPage());
-                } else if (settings.name == '/store/assessment') {
-                  return MaterialPageRoute(
-                      builder: (context) => const AssessmentUMKMPage());
-                }
-              })),
+        icon: const Icon(Icons.home),
+        title: "Home",
+        activeColorPrimary: AppColor.darkDatalab,
+        inactiveColorPrimary: AppColor.darkGrey,
+        // routeAndNavigatorSettings: RouteAndNavigatorSettings(
+        //     initialRoute: '/',
+        //     onGenerateRoute: (RouteSettings settings) {
+        //       if (settings.name == '/store') {
+        //         // return MaterialPageRoute(
+        //         //     builder: (context) => StoreDetailPage(id: arg['id']));
+        //         _controller.jumpToTab(4);
+        //       } else if (settings.name == '/store/edit') {
+        //         return MaterialPageRoute(
+        //             builder: (context) => const EditStoreDetailPage());
+        //       } else if (settings.name == '/store/assessment') {
+        //         return MaterialPageRoute(
+        //             builder: (context) => const AssessmentUMKMPage());
+        //       }
+        //     })
+        routeAndNavigatorSettings: RouteAndNavigatorSettings(
+          initialRoute: "/",
+          routes: getRoutes(context),
+          onGenerateRoute: (settings) {
+            var arg = settings.arguments as Map;
+            if (settings.name == "/store") {
+              return MaterialPageRoute(
+                  builder: (context) => StoreDetailPage(id: arg['id']));
+            }
+          },
+        ),
+      ),
       PersistentBottomNavBarItem(
           icon: const Icon(Icons.event),
           title: "Event",
@@ -80,16 +98,16 @@ class _BottomNavigationState extends State<BottomNavigation> {
           inactiveColorPrimary: AppColor.darkGrey,
           routeAndNavigatorSettings: RouteAndNavigatorSettings(
               initialRoute: '/event',
+              routes: getRoutes(context),
               onGenerateRoute: (RouteSettings settings) {
                 var arg = settings.arguments as Map;
-                if (settings.name == '/event/add') {
-                  return MaterialPageRoute(
-                      builder: (context) => const EventFormPage());
-                } else if (settings.name == '/event/detail') {
+                if (settings.name == '/event/detail') {
                   return MaterialPageRoute(
                       builder: (context) =>
                           EventDetailPage(event: arg['event']));
                 }
+                return MaterialPageRoute(
+                    builder: (context) => const EventFormPage());
               })),
       PersistentBottomNavBarItem(
           icon: const Icon(Icons.forum),

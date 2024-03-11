@@ -4,7 +4,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
-import 'package:sadulur/main.dart';
 import 'package:sadulur/models/umkm_store.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/presentations/widgets/circular_progress.dart';

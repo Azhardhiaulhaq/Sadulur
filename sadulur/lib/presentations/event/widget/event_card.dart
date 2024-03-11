@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -5,7 +7,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
 import 'package:sadulur/models/event.dart';
-import 'package:sadulur/presentations/forum_reply.dart';
+import 'package:sadulur/presentations/event/event_detail_page.dart';
 
 class EventCard extends StatelessWidget {
   Event event;
@@ -19,8 +21,13 @@ class EventCard extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/event/detail',
-                arguments: {'event': event});
+            PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+              context,
+              settings: const RouteSettings(name: '/event/detail'),
+              screen: EventDetailPage(event: event),
+              withNavBar: false,
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            );
           },
           child: Card(
             elevation: 8.0,

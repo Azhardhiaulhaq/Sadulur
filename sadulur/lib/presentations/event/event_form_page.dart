@@ -1,21 +1,21 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
-import 'package:sadulur/main.dart';
 import 'package:sadulur/models/event.dart';
-import 'package:sadulur/models/umkm_store.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/presentations/widgets/circular_progress.dart';
 import 'package:sadulur/presentations/widgets/flushbar.dart';
 import 'package:sadulur/presentations/widgets/form/custom_date_picker.dart';
 import 'package:sadulur/presentations/widgets/form/custom_text_field.dart';
 import 'package:sadulur/store/app.state.dart';
-import 'package:sadulur/store/assessment/assessment.action.dart';
 import 'package:sadulur/store/event/event.action.dart';
 import 'package:sadulur/store/umkm_store/umkm_store.action.dart';
 
@@ -27,18 +27,22 @@ class EventFormPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, _EventFormViewModel>(
       converter: (Store<AppState> store) => _EventFormViewModel(
-        user: store.state.loginState.user,
-        isLoading: store.state.eventState.loading,
-      ),
-      onInit: (store) => store.dispatch(
-          GetUmkmStoreDetailAction(user: store.state.loginState.user)),
+          user: store.state.loginState.user,
+          isLoading: store.state.eventState.loading,
+          upcomingEvents: store.state.eventState.upcomingEvent),
+      onInit: (store) {
+        store.dispatch(
+            GetUmkmStoreDetailAction(user: store.state.loginState.user));
+        // Navigator.pop(context);
+      },
       onWillChange: (previousViewModel, newViewModel) {
-        if (previousViewModel?.user.store.updatedAt != null) {
-          if (previousViewModel!.user.store.updatedAt!
-              .isBefore(newViewModel.user.store.updatedAt!)) {
-            CustomFlushbar.showFlushbar(context, "Success Update Profile",
-                "Basic Informations Updated", AppColor.flushbarSuccessBG);
-          }
+        if (previousViewModel!.upcomingEvents.length <
+            newViewModel.upcomingEvents.length) {
+          CustomFlushbar.showFlushbar(
+              context, 'Success', 'Event Created', AppColor.flushbarSuccessBG);
+          Timer(const Duration(seconds: 2), () {
+            Navigator.pop(context);
+          });
         }
       },
       builder: (BuildContext context, _EventFormViewModel viewModel) {
@@ -55,8 +59,11 @@ class EventFormPage extends StatelessWidget {
 class _EventFormViewModel {
   final UMKMUser user;
   final bool isLoading;
-
-  _EventFormViewModel({required this.user, required this.isLoading});
+  final List<Event> upcomingEvents;
+  _EventFormViewModel(
+      {required this.user,
+      required this.isLoading,
+      required this.upcomingEvents});
 }
 
 class _EventFormContent extends StatefulWidget {
@@ -76,7 +83,7 @@ class _EventFormContent extends StatefulWidget {
 
 class _EventFormContentState extends State<_EventFormContent> {
   final _formKey = GlobalKey<FormBuilderState>();
-
+  File? selectedFile;
   @override
   void initState() {
     super.initState();
@@ -85,50 +92,49 @@ class _EventFormContentState extends State<_EventFormContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        toolbarHeight: 80.0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColor.darkDatalab),
-          onPressed: () {
-            // Handle the back button functionality here
-            Navigator.of(context).pop();
-          },
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          toolbarHeight: 80.0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppColor.darkDatalab),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Sadulur',
+                style: CustomTextStyles.appBarTitle1,
+              ),
+              Text(
+                widget.title,
+                style: CustomTextStyles.appBarTitle2,
+              ),
+            ],
+          ),
         ),
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        body: Stack(
           children: [
-            Text(
-              'Sadulur',
-              style: CustomTextStyles.appBarTitle1,
-            ),
-            Text(
-              widget.title,
-              style: CustomTextStyles.appBarTitle2,
-            ),
-          ],
-        ),
-      ),
-      body: Container(
-          color: Colors.grey[200],
-          child: SingleChildScrollView(
-              child: FormBuilder(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                elevation: 4,
-                color: Colors.white,
-                margin: const EdgeInsets.all(16),
-                child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Stack(
-                      children: [
-                        Column(
+            Container(
+                color: Colors.grey[200],
+                child: SingleChildScrollView(
+                    child: FormBuilder(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      elevation: 4,
+                      color: Colors.white,
+                      margin: const EdgeInsets.all(16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Event Information',
@@ -192,6 +198,14 @@ class _EventFormContentState extends State<_EventFormContent> {
                                 fieldName: 'contactPerson',
                                 validator: FormBuilderValidators.required()),
                             const SizedBox(
+                              height: 16,
+                            ),
+                            _updatePhotoButton(context),
+                            const SizedBox(height: 8),
+                            selectedFile != null
+                                ? Text(selectedFile!.path)
+                                : Container(),
+                            const SizedBox(
                               height: 24,
                             ),
                             _submitButton(
@@ -203,12 +217,29 @@ class _EventFormContentState extends State<_EventFormContent> {
                             ),
                           ],
                         ),
-                        widget.isLoading
-                            ? const CircularProgressCard()
-                            : Container()
-                      ],
-                    ))),
-          ))),
+                      )),
+                ))),
+            widget.isLoading ? const CircularProgressCard() : Container()
+          ],
+        ));
+  }
+
+  Widget _updatePhotoButton(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          backgroundColor: AppColor.backgroundWhite,
+          foregroundColor: AppColor.darkDatalab,
+          textStyle: CustomTextStyles.normalText(fontWeight: FontWeight.bold)),
+      onPressed: () async {
+        final picker = ImagePicker();
+        final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+        if (pickedFile != null) {
+          setState(() {
+            selectedFile = File(pickedFile.path);
+          });
+        }
+      },
+      child: const Text('Tambahkan Banner'),
     );
   }
 
@@ -236,7 +267,8 @@ class _EventFormContentState extends State<_EventFormContent> {
                     location: location,
                     contactPerson: contactPerson,
                     link: link,
-                    author: widget.user.id);
+                    author: widget.user.id,
+                    banner: selectedFile);
 
                 store.dispatch(AddEventAction(event: newEvent));
               }
