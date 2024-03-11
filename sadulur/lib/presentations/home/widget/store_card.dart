@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
+import 'package:sadulur/main.dart';
 import 'package:sadulur/models/umkm_store.dart';
+import 'package:sadulur/presentations/store_detail.dart';
 
 class UMKMStoreCard extends StatelessWidget {
   final UMKMStore store;
@@ -16,7 +19,15 @@ class UMKMStoreCard extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/store', arguments: {'id': store.id});
+            // Navigator.pushNamed(context, '/store', arguments: {'id': store.id});
+            logger.d(store.id);
+            PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+              context,
+              settings: const RouteSettings(name: '/store'),
+              screen: StoreDetailPage(id: store.id),
+              withNavBar: false,
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            );
           },
           child: Card(
             elevation: 8.0,

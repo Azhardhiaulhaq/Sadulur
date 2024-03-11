@@ -20,7 +20,7 @@ EventState umkmStoreReducerAll(EventState state, dynamic action) {
   } else if (action is AddEventAction) {
     newState = state.copyWith(loading: true);
   } else if (action is AddEventSuccessAction) {
-    List<Event> newUpcoming = state.upcomingEvent;
+    List<Event> newUpcoming = List.from(state.upcomingEvent);
     newUpcoming.add(action.event);
     newState =
         state.copyWith(loading: false, error: null, upcomingEvent: newUpcoming);

@@ -154,7 +154,7 @@ class _EditStoreDetailPageContentState
                                 ),
                                 child: Container(
                                     color: Colors.white,
-                                    constraints: BoxConstraints(
+                                    constraints: const BoxConstraints(
                                         minWidth: double.infinity),
                                     padding: const EdgeInsets.all(16.0),
                                     child: Column(

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
 import 'package:sadulur/models/event.dart';
 import 'package:sadulur/models/user.dart';
-import 'package:sadulur/presentations/widgets/event/event_card.dart';
+import 'package:sadulur/presentations/event/event_form_page.dart';
+import 'package:sadulur/presentations/event/widget/event_card.dart';
+import 'package:sadulur/presentations/widgets/circular_progress.dart';
 import 'package:sadulur/store/app.state.dart';
 import 'package:sadulur/store/event/event.action.dart';
 
@@ -95,6 +97,15 @@ class _EventPageContentState extends State<_EventPageContent> {
                       onPressed: () {
                         Navigator.pushNamed(context, '/event/add',
                             arguments: {});
+                        PersistentNavBarNavigator
+                            .pushNewScreenWithRouteSettings(
+                          context,
+                          settings: const RouteSettings(name: '/event/detail'),
+                          screen: const EventFormPage(),
+                          withNavBar: false,
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
                       },
                     )
                   : Container(),
@@ -132,24 +143,61 @@ class _EventPageContentState extends State<_EventPageContent> {
               ],
             ),
           ),
-          body: TabBarView(
+          body: Stack(
             children: [
-              AlignedGridView.count(
-                crossAxisCount: 1,
-                itemCount: widget.pastEvent.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return EventCard(
-                      event: widget.pastEvent[index], isExpired: true);
-                },
+              TabBarView(
+                children: [
+                  RefreshIndicator(
+                      color: AppColor.darkDatalab,
+                      onRefresh: () async {
+                        StoreProvider.of<AppState>(context)
+                            .dispatch(GetAllEventAction());
+                      },
+                      notificationPredicate: (ScrollNotification notification) {
+                        return notification.depth == 1;
+                      },
+                      child: CustomScrollView(slivers: <Widget>[
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: ListView.builder(
+                              itemCount: widget.pastEvent.length,
+                              itemBuilder: (context, index) {
+                                return EventCard(
+                                    event: widget.pastEvent[index],
+                                    isExpired: true);
+                              },
+                            ),
+                          ),
+                        ),
+                      ])),
+                  RefreshIndicator(
+                      color: AppColor.darkDatalab,
+                      onRefresh: () async {
+                        StoreProvider.of<AppState>(context)
+                            .dispatch(GetAllEventAction());
+                      },
+                      notificationPredicate: (ScrollNotification notification) {
+                        return notification.depth == 1;
+                      },
+                      child: CustomScrollView(slivers: <Widget>[
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: ListView.builder(
+                              itemCount: widget.upcomingEvent.length,
+                              itemBuilder: (context, index) {
+                                return EventCard(
+                                    event: widget.upcomingEvent[index],
+                                    isExpired: false);
+                              },
+                            ),
+                          ),
+                        ),
+                      ]))
+                ],
               ),
-              AlignedGridView.count(
-                crossAxisCount: 1,
-                itemCount: widget.upcomingEvent.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return EventCard(
-                      event: widget.upcomingEvent[index], isExpired: false);
-                },
-              )
+              widget.isLoading ? const CircularProgressCard() : Container()
             ],
           )),
     );
