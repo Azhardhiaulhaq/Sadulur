@@ -169,18 +169,26 @@ class _CategoryAsessmentContentState extends State<_CategoryAsessmentContent> {
                 var businessFeasability =
                     _bussinessKey.currentState!.getFormValues();
                 allData.addAll(businessFeasability['value'].toDictionary());
+                allData.addAll({
+                  'business_feasability_score': businessFeasability['score']
+                });
                 score = (score + businessFeasability['score']) as int;
                 var decisionMaking =
                     _decisionMakingKey.currentState!.getFormValues();
                 allData.addAll(decisionMaking['value'].toDictionary());
+                allData
+                    .addAll({'decision_making_score': decisionMaking['score']});
                 score = (score + decisionMaking['score']) as int;
                 var businessCom =
                     _businessCommKey.currentState!.getFormValues();
+                allData.addAll(
+                    {'business_communication_score': businessCom['score']});
                 allData.addAll(businessCom['value'].toDictionary());
                 score = (score + businessCom['score']) as int;
-                logger.d(allData);
                 var collaborationDict =
                     _collaborationKey.currentState!.getFormValues();
+                allData.addAll(
+                    {'collaboration_score': collaborationDict['score']});
                 allData.addAll(collaborationDict['value'].toDictionary());
                 score = (score + collaborationDict['score']) as int;
 

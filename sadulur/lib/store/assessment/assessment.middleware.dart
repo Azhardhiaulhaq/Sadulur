@@ -169,31 +169,6 @@ Middleware<AppState> assessmentMiddleware = (store, action, next) {
       store.dispatch(AssessmentFailedAction(error: error.toString()));
     });
   }
-  // if (action is GmeetInitAction) {
-  //   logger.d("Gmeet : ${action.email} ");
-  //   FirebaseFirestore.instance
-  //       .collection('coachings')
-  //       .where('attendees', arrayContains: action.email)
-  //       .get()
-  //       .then((querySnapshot) {
-  //     List<DocumentSnapshot> documents = querySnapshot.docs;
-  //     List<GoogleMeet> meets = documents.map((document) {
-  //       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-  //       return GoogleMeet(
-  //           startTime: data['startTime'].toDate(),
-  //           endTime: data['endTime'].toDate(),
-  //           title: data['title'],
-  //           description: data['description'],
-  //           location: data['location'],
-  //           meetLink: data['meetLink'],
-  //           attendees: List<String>.from(data['attendees'] ?? []));
-  //     }).toList();
-  //     store.dispatch(GmeetInitSuccessAction(payload: meets));
-  //   }).catchError((error) {
-  //     logger.e(error.toString());
-  //     store.dispatch(GmeetInitFailedAction(error: error.toString()));
-  //   });
 
-  // Pass the action to the next middleware or the reducer
   next(action);
 };

@@ -9,11 +9,11 @@ import 'package:sadulur/presentations/edit_store_detail.dart';
 import 'package:sadulur/presentations/event/event_page.dart';
 import 'package:sadulur/presentations/event/event_detail_page.dart';
 import 'package:sadulur/presentations/event/event_form_page.dart';
-import 'package:sadulur/presentations/forum.dart';
+import 'package:sadulur/presentations/forum/forum_page.dart';
 import 'package:sadulur/presentations/coaching/coaching_page.dart';
 import 'package:sadulur/presentations/home/home_page.dart';
 import 'package:sadulur/presentations/store_detail.dart';
-import 'package:sadulur/presentations/widgets/forum/new_post_editor.dart';
+import 'package:sadulur/presentations/forum/widget/new_post_editor.dart';
 
 class BottomNavigation extends StatefulWidget {
   final BuildContext menuScreenContext;
@@ -43,6 +43,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
       "/store/edit": (final context) => const EditStoreDetailPage(),
       "/store/assessment": (final context) => const AssessmentUMKMPage(),
       '/event/add': (final context) => const EventFormPage(),
+      "/forum/create": (final context) => const NewForumEditor(),
+      "/forum": (final context) => const ForumPage(title: "Networking"),
     };
   }
 
@@ -115,17 +117,18 @@ class _BottomNavigationState extends State<BottomNavigation> {
           activeColorPrimary: AppColor.darkDatalab,
           inactiveColorPrimary: AppColor.darkGrey,
           routeAndNavigatorSettings: RouteAndNavigatorSettings(
-              initialRoute: '/forum',
-              onGenerateRoute: (RouteSettings settings) {
-                if (settings.name == '/forum/create') {
-                  return MaterialPageRoute(
-                      builder: (context) => const NewForumEditor());
-                } else if (settings.name == '/forum') {
-                  return MaterialPageRoute(
-                    builder: (context) => const ForumPage(title: "Networking"),
-                  );
-                }
-              })),
+              initialRoute: '/forum', routes: getRoutes(context)
+              // onGenerateRoute: (RouteSettings settings) {
+              //   if (settings.name == '/forum/create') {
+              //     return MaterialPageRoute(
+              //         builder: (context) => const NewForumEditor());
+              //   } else if (settings.name == '/forum') {
+              //     return MaterialPageRoute(
+              //       builder: (context) => const ForumPage(title: "Networking"),
+              //     );
+              //   }
+              // }
+              )),
       PersistentBottomNavBarItem(
           icon: const Icon(Icons.video_call),
           title: "Coaching",
