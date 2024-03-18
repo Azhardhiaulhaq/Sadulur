@@ -20,7 +20,7 @@ class UMKMStoreCard extends StatelessWidget {
         child: InkWell(
           onTap: () {
             // Navigator.pushNamed(context, '/store', arguments: {'id': store.id});
-            logger.d(store.id);
+
             PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
               context,
               settings: const RouteSettings(name: '/store'),

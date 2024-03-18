@@ -123,9 +123,9 @@ class CustomQuillToolbar extends StatelessWidget {
                 textStyle: TextStyle(
                   fontSize: 14,
                 ),
-                iconTheme: QuillIconTheme(
-                  iconSelectedColor: Colors.red,
-                ),
+                // iconTheme: QuillIconTheme(
+                //   iconSelectedColor: Colors.red,
+                // ),
               ),
             )));
   }
