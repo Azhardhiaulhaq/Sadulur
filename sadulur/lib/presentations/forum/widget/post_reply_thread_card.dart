@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
 import 'package:sadulur/models/forum_post.dart';
-import 'package:sadulur/presentations/widgets/forum/forum_tag_card.dart';
+import 'package:sadulur/presentations/forum/widget/forum_tag_card.dart';
 
 class ForumPostReplyThreadCard extends StatelessWidget {
   final bool isAuthor;

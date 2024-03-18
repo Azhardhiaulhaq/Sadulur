@@ -60,7 +60,7 @@ ForumState forumInitSuccessReducer(ForumState state, dynamic action) {
         replies: [...?state.replies, action.payload],
         posts: listPost);
   } else if (action is LikePostActionSuccess) {
-    List<ForumPost> listPost = state.posts;
+    List<ForumPost> listPost = List.from(state.posts);
     var index =
         listPost.indexWhere((element) => element.postID == action.payload);
 
@@ -75,7 +75,7 @@ ForumState forumInitSuccessReducer(ForumState state, dynamic action) {
       error: "",
     );
   } else if (action is UnLikePostActionSuccess) {
-    List<ForumPost> listPost = state.posts;
+    List<ForumPost> listPost = List.from(state.posts);
     var index =
         listPost.indexWhere((element) => element.postID == action.payload);
     int postLikes = listPost[index].likes ?? 0;
@@ -90,7 +90,7 @@ ForumState forumInitSuccessReducer(ForumState state, dynamic action) {
       error: "",
     );
   } else if (action is ViewPostActionSuccess) {
-    List<ForumPost> listPost = state.posts;
+    List<ForumPost> listPost = List.from(state.posts);
     var index =
         listPost.indexWhere((element) => element.postID == action.payload);
 
@@ -105,12 +105,12 @@ ForumState forumInitSuccessReducer(ForumState state, dynamic action) {
       error: "",
     );
   } else if (action is LikePostReplyActionSuccess) {
-    List<ForumReply>? listPost = state.replies;
+    List<ForumReply> listPost = List.from(state.replies ?? []);
     var index =
-        listPost?.indexWhere((element) => element.replyID == action.payload);
+        listPost.indexWhere((element) => element.replyID == action.payload);
 
-    if (index != -1 && index != null) {
-      listPost?[index] =
+    if (index != -1) {
+      listPost[index] =
           listPost[index].copyWith(likes: (listPost[index].likes ?? 0) + 1);
     }
 
@@ -120,14 +120,14 @@ ForumState forumInitSuccessReducer(ForumState state, dynamic action) {
       error: "",
     );
   } else if (action is UnlikePostReplyActionSuccess) {
-    List<ForumReply>? listPost = state.replies;
+    List<ForumReply> listPost = List.from(state.replies ?? []);
     var index =
-        listPost?.indexWhere((element) => element.replyID == action.payload);
+        listPost.indexWhere((element) => element.replyID == action.payload);
 
-    if (index != -1 && index != null) {
-      int postLikes = listPost?[index].likes ?? 0;
+    if (index != -1) {
+      int postLikes = listPost[index].likes ?? 0;
       if (postLikes > 0) {
-        listPost?[index] = listPost[index].copyWith(likes: postLikes + 1);
+        listPost[index] = listPost[index].copyWith(likes: postLikes - 1);
       }
     }
 

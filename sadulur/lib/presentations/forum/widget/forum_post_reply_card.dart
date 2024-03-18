@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
+import 'package:sadulur/main.dart';
 import 'package:sadulur/models/forum_reply.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/store/app.state.dart';
@@ -173,6 +174,7 @@ class _ForumPostReplyCardState extends State<ForumPostReplyCard> {
         };
       },
       builder: (BuildContext context, VoidCallback callback) {
+        logger.d("--- ${widget.user.likedPost} vs ${widget.reply.replyID}");
         return GestureDetector(
             onTap: callback,
             child: Row(

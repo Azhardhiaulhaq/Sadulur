@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
@@ -8,7 +9,8 @@ import 'package:sadulur/models/forum_post.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/presentations/widgets/circular_progress.dart';
 import 'package:sadulur/presentations/widgets/flushbar.dart';
-import 'package:sadulur/presentations/widgets/forum/post_card.dart';
+import 'package:sadulur/presentations/forum/widget/new_post_editor.dart';
+import 'package:sadulur/presentations/forum/widget/post_card.dart';
 import 'package:sadulur/store/app.state.dart';
 import 'package:sadulur/store/forum/forum.action.dart';
 
@@ -85,7 +87,7 @@ class _ForumPageContentState extends State<_ForumPageContent> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        toolbarHeight: 80.0,
+        toolbarHeight: MediaQuery.of(context).size.height * 0.1,
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,24 +106,40 @@ class _ForumPageContentState extends State<_ForumPageContent> {
           IconButton(
             icon: const Icon(Icons.add, color: Colors.black), // Plus icon
             onPressed: () {
-              Navigator.pushNamed(context, '/forum/create');
+              PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+                context,
+                settings: const RouteSettings(name: '/forum/create'),
+                screen: const NewForumEditor(),
+                withNavBar: false,
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              );
             },
           ),
         ],
       ),
       body: Stack(children: [
-        Container(
-            color: Colors.grey[200],
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 32),
-              child: ListView.builder(
-                itemCount: widget.posts.length,
-                itemBuilder: (context, index) {
-                  return ForumPostCard(
-                      post: widget.posts[index], user: widget.user!);
-                },
+        RefreshIndicator(
+            color: AppColor.darkDatalab,
+            onRefresh: () async {
+              StoreProvider.of<AppState>(context).dispatch(ForumInitAction());
+            },
+            notificationPredicate: (ScrollNotification notification) {
+              return notification.depth == 1;
+            },
+            child: CustomScrollView(slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child: ListView.builder(
+                    itemCount: widget.posts.length,
+                    itemBuilder: (context, index) {
+                      return ForumPostCard(
+                          post: widget.posts[index], user: widget.user!);
+                    },
+                  ),
+                ),
               ),
-            )),
+            ])),
         widget.isLoading
             ? const Center(
                 child: CircularProgressCard(),

@@ -1,5 +1,7 @@
 import 'package:sadulur/models/forum_post.dart';
 import 'package:sadulur/models/forum_reply.dart';
+import 'package:sadulur/models/umkm_store.dart';
+import 'package:sadulur/models/user.dart';
 
 class ForumAction {
   @override
@@ -92,8 +94,9 @@ class AddForumReplySuccess {
 class AddForumPostAction {
   final String type = "ADD_FORUM_POST";
   final ForumPost post;
+  final UMKMUser author;
 
-  AddForumPostAction({required this.post});
+  AddForumPostAction({required this.post, required this.author});
 }
 
 class AddForumPostSuccess {

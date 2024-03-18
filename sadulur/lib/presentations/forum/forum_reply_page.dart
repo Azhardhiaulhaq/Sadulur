@@ -3,14 +3,12 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/text_styles.dart';
-import 'package:sadulur/main.dart';
 import 'package:sadulur/models/forum_post.dart';
 import 'package:sadulur/models/forum_reply.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/presentations/widgets/circular_progress.dart';
-import 'package:sadulur/presentations/widgets/flushbar.dart';
-import 'package:sadulur/presentations/widgets/forum/from_post_reply_card.dart';
-import 'package:sadulur/presentations/widgets/forum/post_reply_thread_card.dart';
+import 'package:sadulur/presentations/forum/widget/forum_post_reply_card.dart';
+import 'package:sadulur/presentations/forum/widget/post_reply_thread_card.dart';
 import 'package:sadulur/store/app.state.dart';
 import 'package:sadulur/store/forum/forum.action.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,18 +32,7 @@ class ForumReplyPage extends StatelessWidget {
           replies: store.state.forumState.replies ?? []),
       onInit: (store) => store.dispatch(GetForumRepliesAction(forumID: postID)),
       onWillChange: (previousViewModel, newViewModel) {},
-      // onDidChange: ((previousViewModel, viewModel) {
-      //   // if (viewModel.error != '') {
-      //   //   CustomFlushbar.showFlushbar(context, "Error Forum", viewModel.error,
-      //   //       AppColor.flushbarErrorBG);
-      //   // } else if (previousViewModel!.replies.length <
-      //   //     viewModel.replies.length) {
-      //   //   CustomFlushbar.showFlushbar(context, "Success",
-      //   //       "Reply is successfully added", AppColor.flushbarSuccessBG);
-      //   // }
-      // }),
       builder: (BuildContext context, _ForumPageViewModel viewModel) {
-        //TODO: Check if empty
         return _ForumPageContent(
           title: title,
           isLoading: viewModel.isLoading,

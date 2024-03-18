@@ -36,8 +36,7 @@ class NewForumEditor extends StatelessWidget {
           isLoading: store.state.forumState.loading),
       builder: (BuildContext context, _NewForumViewModel viewModel) {
         return NewForumEditorContent(
-          userID: viewModel.user.id,
-          userName: viewModel.user.userName,
+          user: viewModel.user,
           isLoading: viewModel.isLoading,
         );
       },
@@ -71,12 +70,10 @@ class _NewForumViewModel {
 }
 
 class NewForumEditorContent extends StatefulWidget {
-  final String userID;
-  final String userName;
+  final UMKMUser user;
   final bool isLoading;
 
-  const NewForumEditorContent(
-      {required this.userID, required this.userName, required this.isLoading});
+  const NewForumEditorContent({required this.user, required this.isLoading});
 
   @override
   NewForumEditorContentState createState() => NewForumEditorContentState();
@@ -251,8 +248,6 @@ class NewForumEditorContentState extends State<NewForumEditorContent> {
         return isFormValid
             ? () async {
                 ForumPost post = ForumPost(
-                    author: widget.userName,
-                    authorID: widget.userID,
                     postID: '',
                     title: _formKey.currentState!.fields["title"]!.value
                         .toString(),
@@ -263,8 +258,11 @@ class NewForumEditorContentState extends State<NewForumEditorContent> {
                     likes: 0,
                     views: 0,
                     comments: 0,
-                    images: []);
-                store.dispatch(AddForumPostAction(post: post));
+                    images: [],
+                    author: widget.user.userName,
+                    authorID: widget.user.id);
+                store.dispatch(
+                    AddForumPostAction(post: post, author: widget.user));
               }
             : () async {};
       },

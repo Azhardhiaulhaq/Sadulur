@@ -4,6 +4,7 @@ import 'package:sadulur/main.dart';
 import 'package:sadulur/models/forum_post.dart';
 import 'package:sadulur/models/forum_reply.dart';
 import 'package:sadulur/store/app.state.dart';
+import 'package:sadulur/store/assessment/assessment.middleware.dart';
 import 'package:sadulur/store/forum/forum.action.dart';
 
 CollectionReference threadsCollection =
@@ -32,24 +33,28 @@ Middleware<AppState> forumMiddleware = (store, action, next) {
 
       for (var document in documents) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        if (data['author'] != null) {
+          DocumentSnapshot userData = await data['author'].get();
+          String username = userData['username'];
+          String userID = userData.id;
+          QuerySnapshot commentSnapshot =
+              await getCommentsCollection(document.id).get();
+          int comments = commentSnapshot.size;
 
-        QuerySnapshot commentSnapshot =
-            await getCommentsCollection(document.id).get();
-        int comments = commentSnapshot.size;
+          ForumPost post = ForumPost(
+              postID: document.id,
+              title: data['title'] ?? "",
+              author: username,
+              authorID: userID,
+              createdTime: data['createdAt'].toDate(),
+              content: data['content'] ?? "",
+              tags: List<String>.from(data['tags'] ?? []),
+              comments: comments,
+              likes: data['likes'] ?? 0,
+              views: data['views'] ?? 0);
 
-        ForumPost post = ForumPost(
-            postID: document.id,
-            title: data['title'] ?? "",
-            author: data['author'] ?? "",
-            authorID: data['authorID'] ?? "",
-            createdTime: data['createdAt'].toDate(),
-            content: data['content'] ?? "",
-            tags: List<String>.from(data['tags'] ?? []),
-            comments: comments,
-            likes: data['likes'] ?? 0,
-            views: data['views'] ?? 0);
-
-        listPost.add(post);
+          listPost.add(post);
+        }
       }
       store.dispatch(ForumInitSuccessAction(payload: listPost));
     }).catchError((error) {
@@ -114,10 +119,10 @@ Middleware<AppState> forumMiddleware = (store, action, next) {
       store.dispatch(ForumFailedAction(error: error.toString()));
     });
   } else if (action is AddForumPostAction) {
+    DocumentReference userRef = userCollection.doc(action.author.id);
     firestore.collection('threads').add({
       'title': action.post.title,
-      'author': action.post.author,
-      'authorID': action.post.authorID,
+      'author': userRef,
       'createdAt': action.post.createdTime,
       'content': action.post.content,
       'views': action.post.views,
@@ -127,9 +132,9 @@ Middleware<AppState> forumMiddleware = (store, action, next) {
         Map<String, dynamic> data = value.data() as Map<String, dynamic>;
         ForumPost newPost = ForumPost(
             postID: document.id,
-            title: data["title"] ?? "",
-            author: data["author"],
-            authorID: data["authorID"],
+            title: action.post.title,
+            author: action.author.userName,
+            authorID: action.author.id,
             createdTime: data["createdAt"].toDate(),
             content: data["content"],
             tags: List.from(data["tags"] ?? []));
@@ -184,7 +189,7 @@ Middleware<AppState> forumMiddleware = (store, action, next) {
         .doc(action.replyID)
         .update({"likes": FieldValue.increment(1)}).then((value) {
       firestore.collection('users').doc(action.userID).update({
-        'likedPost': FieldValue.arrayUnion([action.postID])
+        'likedPost': FieldValue.arrayUnion([action.replyID])
       }).catchError((error) {
         store.dispatch(ForumFailedAction(error: error.toString()));
       });
@@ -193,7 +198,7 @@ Middleware<AppState> forumMiddleware = (store, action, next) {
       store.dispatch(ForumFailedAction(error: error.toString()));
     });
   } else if (action is UnlikePostReplyAction) {
-    logger.d("---------- MASUK UNLIKE REPLY ---------");
+    logger.d("Unlike ${action.replyID}");
     firestore
         .collection('threads')
         .doc(action.postID)
@@ -201,7 +206,7 @@ Middleware<AppState> forumMiddleware = (store, action, next) {
         .doc(action.replyID)
         .update({"likes": FieldValue.increment(-1)}).then((value) {
       firestore.collection('users').doc(action.userID).update({
-        'likedPost': FieldValue.arrayRemove([action.postID])
+        'likedPost': FieldValue.arrayRemove([action.replyID])
       }).catchError((error) {
         logger.e(error.toString());
         store.dispatch(ForumFailedAction(error: error.toString()));

@@ -9,7 +9,7 @@ import 'package:sadulur/constants/text_styles.dart';
 import 'package:sadulur/main.dart';
 import 'package:sadulur/models/forum_post.dart';
 import 'package:sadulur/models/user.dart';
-import 'package:sadulur/presentations/forum_reply.dart';
+import 'package:sadulur/presentations/forum/forum_reply_page.dart';
 import 'package:sadulur/store/app.state.dart';
 import 'package:sadulur/store/forum/forum.action.dart';
 
@@ -73,10 +73,12 @@ class _ForumPostCardState extends State<ForumPostCard> {
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: const CircleAvatar(
+                      leading: CircleAvatar(
                         backgroundColor: Colors.blue,
                         // Add your avatar image or initials here
-                        child: Text('A'), // Example: Display initials
+                        child: Text(widget.post.author
+                            .substring(0, 2)
+                            .toUpperCase()), // Example: Display initials
                       ),
                       title: Text(
                         widget.post.author,
@@ -195,7 +197,11 @@ String formatDateTime(DateTime dateTime) {
   final difference = now.difference(dateTime);
 
   if (difference.inHours < 24) {
-    return '${difference.inHours} hours ago';
+    if (difference.inHours == 0) {
+      return 'Just Now';
+    } else {
+      return '${difference.inHours} hours ago';
+    }
   } else {
     final formatter = DateFormat('MMM dd, yyyy');
     return formatter.format(dateTime);

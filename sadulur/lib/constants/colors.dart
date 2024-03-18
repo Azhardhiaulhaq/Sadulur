@@ -40,4 +40,12 @@ class AppColor {
   static const Color likedIcon = Color(0xff2C78C2);
   static Color flushbarErrorBG = Colors.red[300]!;
   static Color flushbarSuccessBG = Colors.green[300]!;
+  static Color mainOrangeColor = const Color(0xffff430a);
+  static Color mainOrangeTileColor = Color(0xFFFFA07A);
+  static Color lightMainOrangeColor = Color.fromARGB(255, 255, 134, 97);
+  static Color white = Color.fromARGB(255, 255, 255, 255);
+  static Color mainGreen = const Color(0xff5c8001);
+  static Color sideMenuColor = const Color(0xff1B1A1F);
+  static const Color ligthGreen = Color.fromARGB(255, 212, 250, 215);
+  static const Color lightkBlue = Color.fromARGB(255, 189, 220, 241);
 }
