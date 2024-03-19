@@ -8,12 +8,13 @@ import 'package:sadulur/store/gmeet/gmeet.action.dart';
 
 Middleware<AppState> gmeetMiddleware = (store, action, next) {
   if (action is GmeetInitAction) {
-    logger.d("Gmeet : ${action.email} ");
-    FirebaseFirestore.instance
-        .collection('coachings')
-        .where('attendees', arrayContains: action.email)
-        .get()
-        .then((querySnapshot) {
+    Query<Map<String, dynamic>> query =
+        FirebaseFirestore.instance.collection('coachings');
+    if (action.email != "") {
+      logger.d("@@@@@@ ${action.email}");
+      query = query.where('attendees', arrayContains: action.email);
+    }
+    query.get().then((querySnapshot) {
       List<DocumentSnapshot> documents = querySnapshot.docs;
       logger.d("Gmeet : ${documents} ");
       List<GoogleMeet> meets = documents.map((document) {

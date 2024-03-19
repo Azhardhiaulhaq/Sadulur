@@ -18,7 +18,9 @@ import 'package:sadulur/store/gmeet/gmeet.action.dart';
 
 class CoachingFormPage extends StatefulWidget {
   List<ParticipantList> participantList;
-  CoachingFormPage({super.key, required this.participantList});
+  final bool isDialog;
+  CoachingFormPage(
+      {super.key, required this.participantList, this.isDialog = false});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -36,21 +38,23 @@ class _CoachingFormPageState extends State<CoachingFormPage> {
           backgroundColor: Colors.white,
           centerTitle: true,
           toolbarHeight: 80.0,
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Sadulur',
-                style: CustomTextStyles.appBarTitle1,
-              ),
-              Text(
-                "Create New Meeting",
-                style: CustomTextStyles.appBarTitle2,
-              ),
-            ],
-          ),
-          actions: [],
+          title: widget.isDialog
+              ? Container()
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Sadulur',
+                      style: CustomTextStyles.appBarTitle1,
+                    ),
+                    Text(
+                      "Create New Meeting",
+                      style: CustomTextStyles.appBarTitle2,
+                    ),
+                  ],
+                ),
+          actions: const [],
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -177,6 +181,7 @@ class _CoachingFormPageState extends State<CoachingFormPage> {
                       meetLink: formData["meetingLink"],
                       attendees: selectedParticipants);
                   store.dispatch(AddMeetingAction(meet: meet));
+                  Navigator.pop(context);
                 }
               }
             : () async {};

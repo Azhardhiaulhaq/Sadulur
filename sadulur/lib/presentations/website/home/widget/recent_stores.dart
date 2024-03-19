@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/constants/paddings.dart';
 import 'package:sadulur/constants/text_styles.dart';
+import 'package:sadulur/main.dart';
 import 'package:sadulur/models/recent_stores.dart';
 import 'package:sadulur/models/umkm_store.dart';
+import 'package:sadulur/presentations/store_detail.dart';
 
 class RecentStores extends StatelessWidget {
   final List<UMKMStore> stores;
@@ -57,6 +59,30 @@ class RecentStores extends StatelessWidget {
 
 DataRow recentUserDataRow(UMKMStore store, BuildContext context) {
   return DataRow(
+    key: ValueKey(store.id),
+    onLongPress: () {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                content: Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    color: AppColor.white,
+                    child: StoreDetailPage(id: store.id)));
+          });
+    },
+    // onSelectChanged: (bool selected) {
+    //   if (selected) {
+    //     log.add('row-selected: ${itemRow.index}');
+    //   }
+    // },
+    color:
+        MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+      if (states.contains(MaterialState.hovered)) {
+        return AppColor.backgroundGrey.withOpacity(0.5);
+      }
+      return null;
+    }),
     cells: [
       DataCell(
         Row(
