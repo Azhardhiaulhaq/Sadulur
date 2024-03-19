@@ -12,7 +12,7 @@ GmeetState forumInitReducer(GmeetState state, dynamic action) {
   if (action.type == 'GMEET_INIT') {
     newState = state.copyWith(loading: true, error: null, gmeetList: []);
   } else if (action.type == 'ADD_MEETING_ACTION') {
-    newState = state.copyWith(loading: true, error: null, gmeetList: []);
+    newState = state.copyWith(loading: true, error: null);
   }
 
   return newState;
@@ -27,8 +27,10 @@ GmeetState forumInitSuccessReducer(GmeetState state, dynamic action) {
         gmeetList: action.payload["meets"],
         participantList: action.payload["participants"]);
   } else if (action.type == "ADD_MEETING_SUCCESS_ACTION") {
-    List<GoogleMeet> newList = state.gmeetList;
+    List<GoogleMeet> newList = List.from(state.gmeetList);
+    logger.d(newList);
     newList.add(action.payload);
+    logger.d(newList);
     newState = state.copyWith(loading: false, error: null, gmeetList: newList);
   }
 

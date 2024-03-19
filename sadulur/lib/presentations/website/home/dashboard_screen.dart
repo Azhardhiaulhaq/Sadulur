@@ -8,6 +8,7 @@ import 'package:sadulur/models/google_meet.dart';
 import 'package:sadulur/models/umkm_category_info.dart';
 import 'package:sadulur/models/umkm_store.dart';
 import 'package:sadulur/models/user.dart';
+import 'package:sadulur/presentations/website/home/widget/calendar_coaching_widget.dart';
 import 'package:sadulur/presentations/website/home/widget/mini_information.dart';
 import 'package:sadulur/presentations/website/home/widget/recent_stores.dart';
 import 'package:sadulur/responsive.dart';
@@ -29,12 +30,9 @@ class DashboardPage extends StatelessWidget {
           error: store.state.umkmStoreState.error,
           umkmStores: store.state.umkmStoreState.umkmStores,
           user: store.state.loginState.user,
-          gmeetList: store.state.gmeetState.gmeetList,
           isLoading: store.state.umkmStoreState.loading),
       onInit: (store) {
         store.dispatch(GetAllUmkmStoreAction());
-        store.dispatch(
-            GmeetInitAction(email: store.state.loginState.user.email));
         store.dispatch(
             GetUserDetailAction(userID: store.state.loginState.user.id));
       },
@@ -43,7 +41,6 @@ class DashboardPage extends StatelessWidget {
             title: "UMKM Dashboard",
             isLoading: viewModel.isLoading,
             stores: viewModel.umkmStores,
-            meetList: viewModel.gmeetList,
             user: viewModel.user);
       },
       onDidChange: (previousViewModel, viewModel) {
@@ -58,13 +55,11 @@ class _DashboardPageViewModel {
   final bool isLoading;
   final String error;
   final UMKMUser user;
-  final List<GoogleMeet> gmeetList;
 
   _DashboardPageViewModel(
       {required this.umkmStores,
       required this.isLoading,
       required this.error,
-      required this.gmeetList,
       required this.user});
 }
 
@@ -73,13 +68,11 @@ class _DashboardPageContent extends StatefulWidget {
   final bool isLoading;
   final List<UMKMStore> stores;
   final UMKMUser user;
-  final List<GoogleMeet> meetList;
 
   const _DashboardPageContent(
       {required this.title,
       required this.isLoading,
       required this.stores,
-      required this.meetList,
       required this.user});
 
   @override
@@ -90,9 +83,6 @@ class _DashboardPageContentState extends State<_DashboardPageContent> {
   List<UMKMStore> micros = [];
   List<UMKMStore> smalls = [];
   List<UMKMStore> mediums = [];
-  DateTime _focusedDay = DateTime.now();
-  DateTime _selectedDay = DateTime.now();
-  List<GoogleMeet> _selectedDate = [];
   @override
   void initState() {
     super.initState();
@@ -105,40 +95,16 @@ class _DashboardPageContentState extends State<_DashboardPageContent> {
     setState(() {
       micros = widget.stores.where((store) => store.level == "micro").toList();
       smalls = widget.stores.where((store) => store.level == "small").toList();
-      logger.d("# Meeting ##### ${widget.meetList[0]}");
-      logger.d("@@@@@@@ $smalls");
       mediums =
           widget.stores.where((store) => store.level == "medium").toList();
     });
-  }
-
-  List<GoogleMeet> _eventLoader(DateTime date) {
-    return widget.meetList
-        .where((element) => isSameDay(date, element.startTime))
-        .toList();
-  }
-
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    if (!isSameDay(_selectedDay, selectedDay)) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay;
-        _selectedDate = widget.meetList
-            .where((element) => isSameDay(selectedDay, element.startTime))
-            .toList();
-        logger.d("!!!!! ${_selectedDate}");
-        // _selectedDate = calendarData
-        //     .where((element) => isSameDay(selectedDay, element.date))
-        //     .toList();
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
-        padding: EdgeInsets.all(defaultPadding),
+        padding: const EdgeInsets.all(defaultPadding),
         child: Container(
           padding: const EdgeInsets.all(defaultPadding),
           child: Column(
@@ -176,36 +142,7 @@ class _DashboardPageContentState extends State<_DashboardPageContent> {
                   if (!Responsive.isMobile(context))
                     const SizedBox(width: defaultPadding),
                   if (!Responsive.isMobile(context))
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: AppColor.white,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                        child: TableCalendar(
-                          firstDay: DateTime.utc(2010, 10, 16),
-                          lastDay: DateTime.utc(2030, 3, 14),
-                          focusedDay: _focusedDay,
-                          onDaySelected: _onDaySelected,
-                          eventLoader: _eventLoader,
-                          selectedDayPredicate: (day) =>
-                              isSameDay(_focusedDay, day),
-                          calendarStyle: CalendarStyle(
-                            todayDecoration: BoxDecoration(
-                              color: AppColor.darkDatalab,
-                              shape: BoxShape.circle,
-                            ),
-                            markerDecoration: BoxDecoration(
-                              color: AppColor.secondaryTextDatalab,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
+                    const Expanded(flex: 2, child: CalendarCoachingPage())
                   // // On Mobile means if the screen is less than 850 we dont want to show it
                   // if (!Responsive.isMobile(context))
                   //   Expanded(
