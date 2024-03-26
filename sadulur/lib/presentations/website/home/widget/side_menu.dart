@@ -118,13 +118,7 @@ class SideMenu extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 15),
-            //   child: Divider(
-            //     thickness: 1,
-            //     color: AppColor.mainGreen,
-            //   ),
-            // ),
+
             Padding(
               padding: const EdgeInsets.all(10),
               child: DrawerListTile(
@@ -134,15 +128,15 @@ class SideMenu extends StatelessWidget {
                 selected: true,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: DrawerListTile(
-                title: "Dashboard",
-                svgSrc: "assets/menu_dashbord.svg",
-                press: () {},
-                selected: false,
-              ),
-            )
+            // Padding(
+            //   padding: const EdgeInsets.all(10),
+            //   child: DrawerListTile(
+            //     title: "Dashboard",
+            //     svgSrc: "assets/menu_dashbord.svg",
+            //     press: () {},
+            //     selected: false,
+            //   ),
+            // )
             // DrawerListTile(
             //   title: "Posts",
             //   svgSrc: "assets/icons/menu_tran.svg",

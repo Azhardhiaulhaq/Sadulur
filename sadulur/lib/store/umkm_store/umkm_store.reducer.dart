@@ -18,7 +18,8 @@ UmkmStoreState umkmStoreReducerAll(UmkmStoreState state, dynamic action) {
   } else if (action is GetUmkmStoreDetailAction) {
     newState = state.copyWith(loading: true, error: null);
   } else if (action is GetUmkmStoreDetailSuccessAction) {
-    newState = state.copyWith(loading: false, error: null);
+    newState = state.copyWith(
+        loading: false, error: null, selectedUser: action.payload);
   } else if (action is GetAllStoreProductsAction) {
     newState = state.copyWith(loading: true, error: null);
   } else if (action is GetAllStoreProdcutsSuccessAction) {

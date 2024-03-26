@@ -31,6 +31,8 @@ AssessmentState assessmentStoreReducerAll(
     newState = state.copyWith(loading: false, error: null);
   } else if (action is UpdateCategoryAssessmentAction) {
     newState = state.copyWith(loading: false, error: null);
-  } 
+  } else if (action is GetCategoryAssessmentSuccessAction) {
+    newState = state.copyWith(assessmentList: action.categoryAssessment);
+  }
   return newState;
 }

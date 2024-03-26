@@ -22,13 +22,13 @@ class GetAllUmkmStoreAction {
 }
 
 class GetUmkmStoreDetailAction {
-  final UMKMUser user;
+  final String id;
   final String type = "GET_UMKM_STORE_DETAIL_ACTION";
-  GetUmkmStoreDetailAction({required this.user});
+  GetUmkmStoreDetailAction({required this.id});
 
   @override
   String toString() {
-    return 'GetUmkmStoreDetailAction { id: $user }';
+    return 'GetUmkmStoreDetailAction { id: $id }';
   }
 }
 

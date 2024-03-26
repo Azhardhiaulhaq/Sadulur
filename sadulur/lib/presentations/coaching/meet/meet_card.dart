@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:sadulur/constants/colors.dart';
 import 'package:sadulur/models/google_meet.dart';
+import 'package:sadulur/presentations/website/home/widget/calendar_coaching_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class GoogleMeetCard extends StatelessWidget {
@@ -102,9 +103,9 @@ class GoogleMeetCard extends StatelessWidget {
 }
 
 class WebCoachingCard extends StatelessWidget {
-  final GoogleMeet googleMeet;
+  final CalendarEvent event;
 
-  WebCoachingCard({required this.googleMeet});
+  WebCoachingCard({required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +128,9 @@ class WebCoachingCard extends StatelessWidget {
               children: [
                 Row(children: [
                   Image.asset(
-                    'assets/zoom-logo2.png',
+                    event.type == "meet"
+                        ? 'assets/zoom-logo2.png'
+                        : "assets/google_calendar.png",
                     width: 40.0,
                     height: 40.0,
                   ),
@@ -137,7 +140,7 @@ class WebCoachingCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          googleMeet.title,
+                          event.title,
                           style: GoogleFonts.roboto(
                             textStyle: const TextStyle(
                               color: AppColor.darkDatalab,
@@ -150,7 +153,7 @@ class WebCoachingCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4.0),
                         Text(
-                          '${DateFormat('MMM dd, yyyy').format(googleMeet.startTime)} | ${DateFormat('hh:mm a').format(googleMeet.startTime)} - ${DateFormat('hh:mm a').format(googleMeet.endTime)} ',
+                          '${DateFormat('MMM dd, yyyy').format(event.startTime)} | ${DateFormat('hh:mm a').format(event.startTime)} - ${event.endTime != null ? DateFormat('hh:mm a').format(event.endTime!) : ""} ',
                           style: GoogleFonts.roboto(
                             textStyle: const TextStyle(
                               color: AppColor.darkDatalab,

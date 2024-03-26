@@ -15,6 +15,7 @@ class BusinessFeasabilityAssessment {
   bool isEmployeeGetSalary;
   int employeeSalary;
   bool isMixed;
+  int score;
 
   BusinessFeasabilityAssessment(
       {required this.businessAsset,
@@ -28,7 +29,8 @@ class BusinessFeasabilityAssessment {
       required this.ownerSalary,
       required this.isEmployeeGetSalary,
       required this.employeeSalary,
-      required this.isMixed});
+      required this.isMixed,
+      this.score = 0});
 
   factory BusinessFeasabilityAssessment.fromMap(Map<String, dynamic> data) {
     return BusinessFeasabilityAssessment(
@@ -44,6 +46,7 @@ class BusinessFeasabilityAssessment {
       isMixed: data['is_mixed'] == "Ya",
       ownerSalary: data['owner_salary'] ?? 0,
       employeeSalary: data['employee_salary'] ?? 0,
+      score: data['business_feasability_score'] ?? 0,
     );
   }
   Map<String, dynamic> toDictionary() {
@@ -59,7 +62,8 @@ class BusinessFeasabilityAssessment {
       'is_employee_get_salary': isEmployeeGetSalary ? "Ya" : "Tidak",
       'is_mixed': isMixed ? "Ya" : "Tidak",
       'owner_salary': ownerSalary,
-      'employee_salary': employeeSalary
+      'employee_salary': employeeSalary,
+      'business_feasability_score': score
     };
   }
 
@@ -111,6 +115,7 @@ class BusinessFeasabilityAssessment {
         isEmployeeGetSalary = false,
         employeeSalary = 0,
         isMixed = false,
+        score = 0,
         totalRevenue = 0;
 
   // CopyWith method
@@ -126,7 +131,8 @@ class BusinessFeasabilityAssessment {
       int? ownerSalary,
       bool? isEmployeeGetSalary,
       int? employeeSalary,
-      bool? isMixed}) {
+      bool? isMixed,
+      int? score}) {
     return BusinessFeasabilityAssessment(
         businessAsset: businessAsset ?? this.businessAsset,
         totalAsset: totalAsset ?? this.totalAsset,
@@ -139,6 +145,7 @@ class BusinessFeasabilityAssessment {
         ownerSalary: ownerSalary ?? this.ownerSalary,
         isEmployeeGetSalary: isEmployeeGetSalary ?? this.isEmployeeGetSalary,
         employeeSalary: employeeSalary ?? this.employeeSalary,
+        score: score ?? this.score,
         isMixed: isMixed ?? this.isMixed);
   }
 }

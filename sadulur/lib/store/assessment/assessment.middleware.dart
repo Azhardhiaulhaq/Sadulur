@@ -54,31 +54,38 @@ Middleware<AppState> assessmentMiddleware = (store, action, next) {
     });
   } else if (action is GetCategoryAssessmentAction) {
     userCollection
-        .doc(action.user.id)
+        .doc(action.id)
         .collection("categoryAssessment")
+        .orderBy("createdAt")
         .get()
         .then((value) {
-      CategoryAssessment assessment = CategoryAssessment.empty();
+      List<CategoryAssessment> categoryAssessmentList = [];
+      logger.d("Assessment : ${value.size}");
       if (value.docs.isNotEmpty) {
-        var firstDocument = value.docs.last;
-        Map<String, dynamic> data = firstDocument.data();
-        BusinessCommunicationAssessment businessComm =
-            BusinessCommunicationAssessment.fromMap(data);
+        for (QueryDocumentSnapshot snapshot in value.docs) {
+          CategoryAssessment assessment = CategoryAssessment.empty();
+          Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+          BusinessCommunicationAssessment businessComm =
+              BusinessCommunicationAssessment.fromMap(data);
 
-        BusinessFeasabilityAssessment businessFeas =
-            BusinessFeasabilityAssessment.fromMap(data);
-        CollaborationAssessment collaboration =
-            CollaborationAssessment.fromMap(data);
-        DecisionMakingAssessment decisionMaking =
-            DecisionMakingAssessment.fromMap(data);
-        assessment = assessment.copyWith(
-            businessComm: businessComm,
-            businessFeas: businessFeas,
-            collaboration: collaboration,
-            decisionMaking: decisionMaking);
+          BusinessFeasabilityAssessment businessFeas =
+              BusinessFeasabilityAssessment.fromMap(data);
+          CollaborationAssessment collaboration =
+              CollaborationAssessment.fromMap(data);
+          DecisionMakingAssessment decisionMaking =
+              DecisionMakingAssessment.fromMap(data);
+          DateTime createdAt = data['createdAt'].toDate();
+          assessment = assessment.copyWith(
+              businessComm: businessComm,
+              businessFeas: businessFeas,
+              collaboration: collaboration,
+              decisionMaking: decisionMaking,
+              createdAt: createdAt);
+          categoryAssessmentList.add(assessment);
+        }
       }
-      store.dispatch(
-          GetCategoryAssessmentSuccessAction(categoryAssessment: assessment));
+      store.dispatch(GetCategoryAssessmentSuccessAction(
+          categoryAssessment: categoryAssessmentList));
     });
   } else if (action is AddEntreprenurialAssessmentAction) {
     DateTime createTime = DateTime.now();

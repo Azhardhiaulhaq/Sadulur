@@ -6,16 +6,17 @@ class DecisionMakingAssessment {
   bool isJoinCommunity;
   bool isHasCompetitor;
   int numCompetitor;
+  int score;
 
-  DecisionMakingAssessment({
-    required this.isUsedTech,
-    required this.vendor,
-    required this.numProduction,
-    required this.numSupplier,
-    required this.isJoinCommunity,
-    required this.isHasCompetitor,
-    required this.numCompetitor,
-  });
+  DecisionMakingAssessment(
+      {required this.isUsedTech,
+      required this.vendor,
+      required this.numProduction,
+      required this.numSupplier,
+      required this.isJoinCommunity,
+      required this.isHasCompetitor,
+      required this.numCompetitor,
+      this.score = 0});
 
   factory DecisionMakingAssessment.fromMap(Map<String, dynamic> data) {
     return DecisionMakingAssessment(
@@ -26,6 +27,7 @@ class DecisionMakingAssessment {
       isJoinCommunity: data['is_join_community'] == "Ya",
       isHasCompetitor: data['is_has_competitor'] == "Ya",
       numCompetitor: data['num_competitor'] ?? 0,
+      score: data['decision_making_score'] ?? 0,
     );
   }
 
@@ -38,6 +40,7 @@ class DecisionMakingAssessment {
       'is_join_community': isJoinCommunity ? "Ya" : "Tidak",
       'is_has_competitor': isHasCompetitor ? "Ya" : "Tidak",
       'num_competitor': numCompetitor,
+      'decision_making_score': score
     };
   }
 
@@ -49,18 +52,19 @@ class DecisionMakingAssessment {
         numSupplier = 0,
         isJoinCommunity = false,
         isHasCompetitor = false,
+        score = 0,
         numCompetitor = 0;
 
   // CopyWith method
-  DecisionMakingAssessment copyWith({
-    String? isUsedTech,
-    String? vendor,
-    int? numProduction,
-    int? numSupplier,
-    bool? isJoinCommunity,
-    bool? isHasCompetitor,
-    int? numCompetitor,
-  }) {
+  DecisionMakingAssessment copyWith(
+      {String? isUsedTech,
+      String? vendor,
+      int? numProduction,
+      int? numSupplier,
+      bool? isJoinCommunity,
+      bool? isHasCompetitor,
+      int? numCompetitor,
+      int? score}) {
     return DecisionMakingAssessment(
       isUsedTech: isUsedTech ?? this.isUsedTech,
       vendor: vendor ?? this.vendor,
@@ -69,6 +73,7 @@ class DecisionMakingAssessment {
       isJoinCommunity: isJoinCommunity ?? this.isJoinCommunity,
       isHasCompetitor: isHasCompetitor ?? this.isHasCompetitor,
       numCompetitor: numCompetitor ?? this.numCompetitor,
+      score: score ?? this.score,
     );
   }
 
