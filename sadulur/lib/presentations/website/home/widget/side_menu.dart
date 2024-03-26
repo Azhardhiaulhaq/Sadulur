@@ -5,8 +5,8 @@ import 'package:sadulur/constants/text_styles.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   get defaultPadding => 5;
 
@@ -18,7 +18,6 @@ class SideMenu extends StatelessWidget {
       elevation: 5,
       shadowColor: AppColor.black,
       child: SingleChildScrollView(
-        // it enables scrolling
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -179,6 +178,7 @@ class SideMenu extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class DrawerListTile extends StatelessWidget {
   DrawerListTile({
     super.key,
