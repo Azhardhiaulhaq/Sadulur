@@ -48,9 +48,9 @@ class GetEntreprenurialAssessmentSuccessAction {
 
 class GetCategoryAssessmentAction {
   final type = 'GET_CATEGORY_ASSESSMENT_ACTION';
-  final UMKMUser user;
+  final String id;
 
-  GetCategoryAssessmentAction({required this.user});
+  GetCategoryAssessmentAction({required this.id});
 }
 
 class GetCategoryAssessmentSuccessAction {

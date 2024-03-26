@@ -1,9 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:redux/redux.dart';
 import 'package:sadulur/main.dart';
+import 'package:sadulur/models/business_communication_assessment.dart';
+import 'package:sadulur/models/business_feasability_assessment.dart';
+import 'package:sadulur/models/category_assessment.dart';
+import 'package:sadulur/models/collaboration_assessment.dart';
+import 'package:sadulur/models/decision_making_assessment.dart';
+import 'package:sadulur/models/entrepreneurial_assessment.dart';
 import 'package:sadulur/models/store_product.dart';
 import 'package:sadulur/models/umkm_store.dart';
 import 'package:sadulur/models/user.dart';
+import 'package:sadulur/models/user_assessment.dart';
 import 'package:sadulur/store/app.state.dart';
 import 'package:sadulur/store/umkm_store/umkm_store.action.dart';
 import 'package:path/path.dart';
@@ -58,40 +65,84 @@ Middleware<AppState> umkmMiddleware = (store, action, next) async {
       store.dispatch(UmkmStoreFailedAction(error: error.toString()));
     });
   } else if (action is GetUmkmStoreDetailAction) {
-    userRef.doc(action.user.id).get().then((document) async {
+    userRef.doc(action.id).get().then((document) async {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-      UMKMStore umkmStore = UMKMStore.empty();
-      DocumentReference? storeRef = data["store"];
+      // Map<String, dynamic> userData = value.data() as Map<String, dynamic>;
+      QuerySnapshot? entAssessmentSnapshot = await userRef
+          .doc(action.id)
+          .collection('entrepreneurialAssessment')
+          .orderBy('createdAt', descending: true)
+          .limit(1)
+          .get();
 
-      if (storeRef != null) {
-        DocumentSnapshot storeSnapshot = await storeRef.get();
-        if (storeSnapshot.exists) {
-          Map<String, dynamic> storeData =
-              storeSnapshot.data() as Map<String, dynamic>;
-          umkmStore =
-              UMKMStore.fromMap(storeData, action.user.id, action.user.email);
-
-          storeRef.collection('products').get().then((product) {
-            List<StoreProduct> products = [];
-            for (var element in product.docs) {
-              Map<String, dynamic> data = element.data();
-              StoreProduct product = StoreProduct(
-                  id: element.id,
-                  name: data['name'] ?? "No Product Name",
-                  description: data['description'] ?? "No Description",
-                  imageUrl: data['image'] ?? "",
-                  price: data['price'] ?? 0,
-                  seenNumber: data['seen'] ?? 0);
-
-              products.add(product);
-            }
-          }).catchError((error) {
-            logger.e(error);
-            store.dispatch(UmkmStoreFailedAction(error: error.toString()));
-          });
-        }
+      EntrepreneurialAssessment entAssessment =
+          EntrepreneurialAssessment.empty();
+      if (entAssessmentSnapshot.docs.isNotEmpty) {
+        Map<String, dynamic> entData =
+            entAssessmentSnapshot.docs.first.data() as Map<String, dynamic>;
+        entAssessment = EntrepreneurialAssessment.fromMap(entData);
       }
-      store.dispatch(GetUmkmStoreDetailSuccessAction(payload: umkmStore));
+
+      QuerySnapshot catAssessmentSnapshot = await userRef
+          .doc(action.id)
+          .collection('categoryAssessment')
+          .orderBy('createdAt', descending: true)
+          .limit(1)
+          .get();
+
+      CategoryAssessment categoryAssessment = CategoryAssessment.empty();
+      if (catAssessmentSnapshot.docs.isNotEmpty) {
+        Map<String, dynamic> catData =
+            catAssessmentSnapshot.docs.first.data() as Map<String, dynamic>;
+        categoryAssessment = CategoryAssessment(
+            id: catAssessmentSnapshot.docs.first.id,
+            businessComm: BusinessCommunicationAssessment.fromMap(catData),
+            businessFeas: BusinessFeasabilityAssessment.fromMap(catData),
+            collaboration: CollaborationAssessment.fromMap(catData),
+            decisionMaking: DecisionMakingAssessment.fromMap(catData),
+            createdAt: catData['createdAt'].toDate());
+
+        UserAssessment userAssessment = UserAssessment(
+            basicAssessment: categoryAssessment,
+            entrepreneurialAssessment: entAssessment);
+
+        UMKMStore umkmStore = UMKMStore.empty();
+        DocumentReference? storeRef = data["store"];
+
+        if (storeRef != null) {
+          DocumentSnapshot storeSnapshot = await storeRef.get();
+          if (storeSnapshot.exists) {
+            Map<String, dynamic> storeData =
+                storeSnapshot.data() as Map<String, dynamic>;
+            umkmStore =
+                UMKMStore.fromMap(storeData, action.id, data['email'] ?? "");
+
+            storeRef.collection('products').get().then((product) {
+              List<StoreProduct> products = [];
+              for (var element in product.docs) {
+                Map<String, dynamic> data = element.data();
+                StoreProduct product = StoreProduct(
+                    id: element.id,
+                    name: data['name'] ?? "No Product Name",
+                    description: data['description'] ?? "No Description",
+                    imageUrl: data['image'] ?? "",
+                    price: data['price'] ?? 0,
+                    seenNumber: data['seen'] ?? 0);
+
+                products.add(product);
+              }
+            }).catchError((error) {
+              logger.e(error);
+              store.dispatch(UmkmStoreFailedAction(error: error.toString()));
+            });
+          }
+        }
+        // Map<String, dynamic> data, String id,
+        // UserAssessment assessment, UMKMStore store
+        UMKMUser userData =
+            UMKMUser.fromMap(data, action.id, userAssessment, umkmStore);
+        store.dispatch(GetUmkmStoreDetailSuccessAction(payload: userData));
+      }
     }).catchError((error) {
       // Handle the error, such as dispatching an error action
       logger.e(error.toString());

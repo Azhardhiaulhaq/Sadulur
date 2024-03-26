@@ -9,6 +9,7 @@ class BusinessCommunicationAssessment {
   bool hasLoyalBuyer;
   int numLoyalBuyer;
   int transactionFrequency;
+  int score;
 
   BusinessCommunicationAssessment({
     required this.platform,
@@ -21,21 +22,22 @@ class BusinessCommunicationAssessment {
     required this.hasLoyalBuyer,
     required this.numLoyalBuyer,
     required this.transactionFrequency,
+    this.score = 0,
   });
 
   factory BusinessCommunicationAssessment.fromMap(Map<String, dynamic> data) {
     return BusinessCommunicationAssessment(
-      platform: data['platform'] ?? "Offline",
-      socialMedia: List<String>.from(data['socmed'] ?? []),
-      isHostedEvent: data['is_hosted_event'] == "Ya",
-      listBuyers: data['list_buyers'] ?? "",
-      numBuyer: data['num_buyer'] ?? 0,
-      isComplained: data['is_complained'] == "Ya",
-      complaint: data['complaint'] ?? "",
-      hasLoyalBuyer: data['has_loyal_buyer'] == "Ya",
-      numLoyalBuyer: data['num_loyal_buyer'] ?? 0,
-      transactionFrequency: data['transaction_frequency'] ?? 0,
-    );
+        platform: data['platform'] ?? "Offline",
+        socialMedia: List<String>.from(data['socmed'] ?? []),
+        isHostedEvent: data['is_hosted_event'] == "Ya",
+        listBuyers: data['list_buyers'] ?? "",
+        numBuyer: data['num_buyer'] ?? 0,
+        isComplained: data['is_complained'] == "Ya",
+        complaint: data['complaint'] ?? "",
+        hasLoyalBuyer: data['has_loyal_buyer'] == "Ya",
+        numLoyalBuyer: data['num_loyal_buyer'] ?? 0,
+        transactionFrequency: data['transaction_frequency'] ?? 0,
+        score: data['business_communication_score'] ?? 0);
   }
 
   Map<String, dynamic> toDictionary() {
@@ -50,6 +52,7 @@ class BusinessCommunicationAssessment {
       'has_loyal_buyer': hasLoyalBuyer ? "Ya" : "Tidak",
       'num_loyal_buyer': numLoyalBuyer,
       'transaction_frequency': transactionFrequency,
+      'business_communication_score': score
     };
   }
 
@@ -64,33 +67,34 @@ class BusinessCommunicationAssessment {
         complaint = "",
         hasLoyalBuyer = false,
         numLoyalBuyer = 0,
-        transactionFrequency = 0;
+        transactionFrequency = 0,
+        score = 0;
 
   // CopyWith method
-  BusinessCommunicationAssessment copyWith({
-    String? platform,
-    List<String>? socialMedia,
-    bool? isHostedEvent,
-    String? listBuyers,
-    int? numBuyer,
-    bool? isComplained,
-    String? complaint,
-    bool? hasLoyalBuyer,
-    int? numLoyalBuyer,
-    int? transactionFrequency,
-  }) {
+  BusinessCommunicationAssessment copyWith(
+      {String? platform,
+      List<String>? socialMedia,
+      bool? isHostedEvent,
+      String? listBuyers,
+      int? numBuyer,
+      bool? isComplained,
+      String? complaint,
+      bool? hasLoyalBuyer,
+      int? numLoyalBuyer,
+      int? transactionFrequency,
+      int? score}) {
     return BusinessCommunicationAssessment(
-      platform: platform ?? this.platform,
-      socialMedia: socialMedia ?? this.socialMedia,
-      isHostedEvent: isHostedEvent ?? this.isHostedEvent,
-      listBuyers: listBuyers ?? this.listBuyers,
-      numBuyer: numBuyer ?? this.numBuyer,
-      isComplained: isComplained ?? this.isComplained,
-      complaint: complaint ?? this.complaint,
-      hasLoyalBuyer: hasLoyalBuyer ?? this.hasLoyalBuyer,
-      numLoyalBuyer: numLoyalBuyer ?? this.numLoyalBuyer,
-      transactionFrequency: transactionFrequency ?? this.transactionFrequency,
-    );
+        platform: platform ?? this.platform,
+        socialMedia: socialMedia ?? this.socialMedia,
+        isHostedEvent: isHostedEvent ?? this.isHostedEvent,
+        listBuyers: listBuyers ?? this.listBuyers,
+        numBuyer: numBuyer ?? this.numBuyer,
+        isComplained: isComplained ?? this.isComplained,
+        complaint: complaint ?? this.complaint,
+        hasLoyalBuyer: hasLoyalBuyer ?? this.hasLoyalBuyer,
+        numLoyalBuyer: numLoyalBuyer ?? this.numLoyalBuyer,
+        transactionFrequency: transactionFrequency ?? this.transactionFrequency,
+        score: score ?? this.score);
   }
 
   int getScore() {

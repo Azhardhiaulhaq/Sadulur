@@ -32,7 +32,7 @@ class EventFormPage extends StatelessWidget {
           upcomingEvents: store.state.eventState.upcomingEvent),
       onInit: (store) {
         store.dispatch(
-            GetUmkmStoreDetailAction(user: store.state.loginState.user));
+            GetUmkmStoreDetailAction(id: store.state.loginState.user.id));
         // Navigator.pop(context);
       },
       onWillChange: (previousViewModel, newViewModel) {

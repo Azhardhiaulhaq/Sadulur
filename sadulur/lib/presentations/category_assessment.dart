@@ -34,7 +34,7 @@ class CategoryAsessmentPage extends StatelessWidget {
           assessment: store.state.loginState.user.assessment.basicAssessment,
           questions: store.state.assessmentState.entreprenurialQuestions ?? []),
       onInit: (store) => store.dispatch(
-          GetCategoryAssessmentAction(user: store.state.loginState.user)),
+          GetCategoryAssessmentAction(id: store.state.loginState.user.id)),
       onWillChange: (previousViewModel, newViewModel) {
         if (previousViewModel?.user.updatedAt != null) {
           if (previousViewModel!.user.assessment.basicAssessment !=

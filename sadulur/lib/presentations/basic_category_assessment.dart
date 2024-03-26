@@ -27,7 +27,7 @@ class BasicCategoryAssessmentPage extends StatelessWidget {
           store: store.state.loginState.user.store,
           questions: store.state.assessmentState.entreprenurialQuestions ?? []),
       onInit: (store) => store.dispatch(
-          GetUmkmStoreDetailAction(user: store.state.loginState.user)),
+          GetUmkmStoreDetailAction(id: store.state.loginState.user.id)),
       onWillChange: (previousViewModel, newViewModel) {
         if (previousViewModel?.user.store.updatedAt != null) {
           if (previousViewModel!.user.store.updatedAt!

@@ -7,16 +7,6 @@ import 'package:sadulur/models/decision_making_assessment.dart';
 
 class CategoryAssessment {
   String id;
-  // String formality;
-  // String organisation;
-  // String usedWorkers;
-  // String productionProcess;
-  // String marketOrientation;
-  // String profileOwner;
-  // String techUsed;
-  // String genderOwner;
-  // String motivation;
-  // String spirit;
   BusinessCommunicationAssessment businessComm;
   BusinessFeasabilityAssessment businessFeas;
   CollaborationAssessment collaboration;

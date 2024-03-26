@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:sadulur/main.dart';
+import 'package:sadulur/models/category_assessment.dart';
 import 'package:sadulur/models/umkm_store.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/models/user_assessment.dart';
@@ -69,8 +70,16 @@ LoginState loginSuccessReducer(LoginState state, dynamic action) {
     UMKMUser? newUser = state.user.copyWith(assessment: newAssessment);
     newState = state.copyWith(user: newUser);
   } else if (action is GetCategoryAssessmentSuccessAction) {
-    UMKMUser? newUser = state.user;
-    newUser.assessment.basicAssessment = action.categoryAssessment;
+    var assessment = CategoryAssessment.empty();
+
+    if (action.categoryAssessment.isNotEmpty) {
+      assessment =
+          action.categoryAssessment[action.categoryAssessment.length - 1];
+      logger.d("Login Reducer: ${action.categoryAssessment}");
+    }
+    UserAssessment userAssessment =
+        state.user.assessment.copyWith(basicAssessment: assessment);
+    UMKMUser? newUser = state.user.copyWith(assessment: userAssessment);
     newState = state.copyWith(user: newUser);
   } else if (action is UpdateCategoryAssessmentSuccessAction) {
     UserAssessment newAssessment = UserAssessment(
@@ -83,7 +92,7 @@ LoginState loginSuccessReducer(LoginState state, dynamic action) {
         assessment: newAssessment, updatedAt: DateTime.now(), store: newStore);
     newState = state.copyWith(user: newUser);
   } else if (action is GetUmkmStoreDetailSuccessAction) {
-    UMKMUser newUser = state.user.copyWith(store: action.payload);
+    UMKMUser newUser = state.user.copyWith(store: action.payload.store);
     newState = state.copyWith(loading: false, error: null, user: newUser);
   } else if (action is UpdateUMKMPictureSuccessAction) {
     // state.storeDetail?.changePhotoProfile(action.downloadUrl);
