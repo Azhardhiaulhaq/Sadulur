@@ -1,28 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:redux/redux.dart';
 import 'package:sadulur/constants/colors.dart';
-import 'package:sadulur/constants/paddings.dart';
 import 'package:sadulur/constants/text_styles.dart';
-import 'package:sadulur/main.dart';
 import 'package:sadulur/models/event.dart';
 import 'package:sadulur/models/google_meet.dart';
 import 'package:sadulur/models/participant_list.dart';
-import 'package:sadulur/models/umkm_category_info.dart';
-import 'package:sadulur/models/umkm_store.dart';
 import 'package:sadulur/models/user.dart';
 import 'package:sadulur/presentations/coaching/coaching_form_page.dart';
 import 'package:sadulur/presentations/coaching/meet/meet_card.dart';
 import 'package:sadulur/presentations/event/event_form_page.dart';
-import 'package:sadulur/presentations/website/home/widget/mini_information.dart';
-import 'package:sadulur/presentations/website/home/widget/recent_stores.dart';
-import 'package:sadulur/responsive.dart';
 import 'package:sadulur/store/app.state.dart';
 import 'package:sadulur/store/event/event.action.dart';
 import 'package:sadulur/store/gmeet/gmeet.action.dart';
-import 'package:sadulur/store/login/login.action.dart';
-import 'package:sadulur/store/umkm_store/umkm_store.action.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarCoachingPage extends StatelessWidget {
